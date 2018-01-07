@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Brad's Twitch.Tv Tool</title>
+	<link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="twitchstyle.css">
+	<script type="text/javascript" src = "twitchscript.js"></script>
+</head>
+<body>
+
+<!--
+HEADING
+-->
+
+	<h1 onclick = "getFCCStreams()" class = "main-heading">Brad's Twitch Tool</h1>
+
+<!--
+STREAMER SEARCH
+-->
+
+	<div class="streamer-search">
+		<input class = "search-bar" type="text" placeholder="Type streamer name here..."></input>
+		<button class = "search-bar-btn" type="submit">Search</button>
+		<!--<button class = "refresh-page">Refresh</button>-->
+	</div>
+
+<!--
+STREAMS-DIV
+-->
+
+	<div class = "streams-div">
+
+	<!--
+	TABS
+	-->
+
+		<div class = "tab-div">
+			<div class = "tab" id = "freecodecamp" onclick = "fcc(this, 'freecodecamp', fccStreams)"><button><div>FFC's Streams</div></button></div>
+			<div class = "tab" id = "twitch" onclick = "twitch(this)"><button><div>Twitch Featured</div></button></div>
+			<div class = "tab" id = "brad" onclick = "brad(this, 'brad', bradStreams)"><button><div>Brad's Streams</div></button></div>
+		</div>
+
+	<!--
+	FCC STREAMS
+	-->
+
+		<div class = "freecodecamp-featured featured" id = "show">
+			<h2>FFC Recommended Streams</h2>
+		</div>
+
+	<!--
+	TWITCH STREAMS
+	-->
+
+		<div class = "twitch-featured featured">
+			<h2>Featured by Twitch.Tv</h2>
+		</div>
+
+	<!--
+	BRAD STREAMS
+	-->
+
+		<div class = "brad-featured featured">
+			<h2>Brad's Recommended Streams</h2>
+		</div>
+	</div>
+
+</body>
+</html>
