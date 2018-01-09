@@ -100,16 +100,15 @@ body, html {
 	height : 100%;
 	text-align  : center;
 	background-color : #6441a5;
-	font-family : "Roboto", sans-serif;
+	font-family: 'Press Start 2P', cursive;
 }
 
 h1 {
 	font-size : 35px;
-	margin : 2vh;
+	margin : 3vh;
 }
 
 h2 {
-	display : inline-block;
 	font-size : 26.25px;
 	width : 100%;
 	margin : 1vh;
@@ -117,26 +116,28 @@ h2 {
 
 h3 {
 	font-size: 20.5px;
-	margin : 0.75vh auto;	
+	margin : 1.5vh auto;
+	line-height: 120%
 
 }
 
 h4 {
 	font-size : 17.5px;
-	margin : 0.75vh auto;
+	margin : 1.5vh auto;
+	line-height : 120%;
 
 }
 
 input {
 	height : 100%;
-	width : 76%;
+	width : 75%;
 	float : left;
 	padding-left: 3%;
 }
 
 .streamer-search{
 	border : solid;
-	width : 100%;
+	width : 90%;
 	height : 5%;
 	border : none;
 	border-radius : 0;
@@ -150,9 +151,24 @@ input {
 	float : left;
 }
 
+.refresh-streams {
+	margin : 2vh 0;
+	height : 10vh;
+	width : 90%;
+}
+
+.search-result-div {
+	width : 90%;
+	background-color : #eee;
+	margin : 1vh auto;
+}
+
+.search-result-inner {
+	margin : 0 5%;
+}
+
 .streams-div{
 	width : 90%;
-	/*border : solid 5px red;*/
 	margin : 0 auto;
 }
 
@@ -160,12 +176,11 @@ input {
 	border-bottom : none;
 	height : 10vh;
 	width : 100%;
-	
 }
 
 .tab {
 	display : inline-block;
-	width : 32.25%;
+	width : 29.6%;
 	height : 100%;
 	background-color : #eee;
 	border-top-left-radius : 25px;
@@ -186,10 +201,36 @@ input {
 }
 
 .featured {
-	display : none;
 	padding : 3vh 0;
+	position : relative;
+	display : none;
     width : 100%;
     background-color : #eee;
+    overflow : hidden;
+    margin-bottom : 3vh;
+}
+
+.freecodecamp-online, .freecodecamp-offline, .brad-online, .brad-online {
+	position : absolute;
+	top : 20%;
+	left : 0;
+	display : inline-block;
+	width : 100%;
+	background-color : #eee;
+	transition : left 200ms ease-in-out;
+}
+
+.freecodecamp-offline, .brad-offline {
+	background-color : red;
+	left : 100%;
+}
+
+.move-online {
+	left : -100%;
+}
+
+.move-offline {
+	left : 0;
 }
 
 .featured-streamer{
@@ -210,11 +251,9 @@ a:hover {
 .img {
 	width : 95%;
 	height : 180px;
-	background-color: red;
 	margin : 0 auto;
 }
 
 #show {
 	display : block;
 }
-
