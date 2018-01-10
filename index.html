@@ -2,11 +2,13 @@
 <html>
 <head>
 	<title>Brad's Twitch.Tv Tool</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="twitchstyle.css">
 	<script type="text/javascript" src = "twitchscript.js"></script>
 </head>
 <body>
+	<div class = "fullscreen">
 
 <!--
 HEADING
@@ -22,7 +24,7 @@ STREAMER SEARCH
 		<input class = "search-bar" type="text" placeholder="Type streamer name here..."></input>
 		<button class = "search-bar-btn" type="submit" onclick = "streamerSearch()">Search</button>
 	</div>
-	<button class = "refresh-streams">Refresh Streams</button>
+	<button onclick = "refresh()" class = "refresh-streams">Refresh Streams</button>
 	<div class = "search-result-div"></div>
 
 <!--
@@ -36,9 +38,9 @@ STREAMS-DIV
 	-->
 
 		<div class = "tab-div">
-			<div class = "tab" id = "freecodecamp" onclick = "fcc(this)"><button><div>FCC's Streams</div></button></div>
-			<div class = "tab" id = "twitch" onclick = "twitch(this)"><button><div>Twitch Featured</div></button></div>
-			<div class = "tab" id = "brad" onclick = "brad(this)"><button><div>Brad's Streams</div></button></div>
+			<div class = "tab" id = "freecodecamp" onclick = "fcc(this)"><button><div class = "freecodecamp-inner-tab-div inner-tab-div" id = "active">FCC's Streams</div></button></div>
+			<div class = "tab" id = "twitch" onclick = "twitch(this)"><button><div class = "twitch-inner-tab-div inner-tab-div">Twitch Featured</div></button></div>
+			<div class = "tab" id = "brad" onclick = "brad(this)"><button><div class = "brad-inner-tab-div inner-tab-div">Brad's Streams</div></button></div>
 		</div>
 
 	<!--
@@ -46,7 +48,7 @@ STREAMS-DIV
 	-->
 
 		<div class = "freecodecamp-featured featured" id = "show">
-			<h2>FCC Recommended Streams</h2>
+			<h2 class = "freecodecamp-heading">FCC Recommended Streams</h2>
 			<div class = "freecodecamp-offline"></div>
 			<div class = "freecodecamp-online"></div>
 		</div>
@@ -64,11 +66,12 @@ STREAMS-DIV
 	-->
 
 		<div class = "brad-featured featured">
-			<h2>Brad's Recommended Streams</h2>
+			<h2 class = "brad-heading">Brad's Recommended Streams</h2>
 			<div class = "brad-offline"></div>
 			<div class = "brad-online"></div>
 		</div>
 	</div>
+</div>
 
 </body>
 </html>

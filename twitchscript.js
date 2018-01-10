@@ -2,15 +2,6 @@ var data;
 var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "storbeck", "habathcx"];
 var bradStreams = ["foggedftw2", "boxerpete", "neace", "imaqtpie", "loltyler1", "tobiasfate", "karnrs"];
 var offlineShowing = false;
-var heightGenInfo = 
-{"320pxwidth" : 
-[{"online" : ["top", "divHeights", "totalActualHeight", "desiredHeight"]}, 
-{"1" : [17.5, 444, 897, 900]}, 
-{"2" : [10, 888, 897, 900]}, 
-{"3" : [7.5, 1332, 1447, "desiredHeight"]}, 
-{"4" : [5, 1776, "desiredHeight"]}, 
-{"5" : [4, 2220, 2392, "desiredHeight"]}]};
-var tabWidth = { "320px" : 29.6};
 
 function getJSON(query) {
   var request = new XMLHttpRequest();
@@ -42,7 +33,6 @@ function getJSON(query) {
 }
 
 function htmlGenerator (json, isItTwitch, i) {
-  //Not sure if removing class of twitch-div breaks anything
   if (isItTwitch) {
     var generator = '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + 
         json.featured[i].stream.channel.display_name + '"><h3>'
@@ -73,8 +63,10 @@ function tabSwitch(tab) {
 	console.log("tabSwitch() called for " + tab.id);
 	for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
 		document.getElementsByClassName("featured")[i].id = "";
+    document.getElementsByClassName("inner-tab-div")[i].id = "";
 	}
 	document.getElementsByClassName(tab.id + "-featured")[0].id = "show";
+  document.getElementsByClassName(tab.id + "-inner-tab-div")[0].id = "active";
 }
 
 function offlineOnline() {
@@ -93,47 +85,31 @@ function offlineOnline() {
   }
 }
 
-function whatShouldTopBe(streamType, streamingArr, streamingStr) {
-      switch(streamingArr.length) {
-    case 0:
-        console.log("1 online");
-        document.getElementsByClassName(streamType + "-featured")[0].style.height = "500px";
-        document.getElementsByClassName(streamType + "-" + streamingStr)[0].style.top = "4%";
-        break;
-    case 1:
-        console.log("2online");
-        document.getElementsByClassName(streamType + "-" + streamingStr)[0].style.top = "17.5%";
-        break;
-    case 2 :
-        console.log("3 online");
-        document.getElementsByClassName(streamType + "-" + streamingStr)[0].style.top = "10%";
-        break;
-    case 3 :
-        console.log("4 online");
-        document.getElementsByClassName(streamType + "-" + streamingStr)[0].style.top = "7.5%";
-        break;
-    case 4 :
-        console.log("5 online");
-        document.getElementsByClassName(streamType + "-" + streamingStr)[0].style.top = "5%";
-        break;        
-    default:
-        console.log("else online");
-        document.getElementsByClassName(streamType + "-" + streamingStr)[0].style.top = "4%";
-        }
+function whatShouldTopAndHeightsBe(streamType, margins, divHeights) {
+  document.getElementsByClassName(streamType + "-online")[0].style.height = "calc(" + margins + "vh + " + divHeights + "px)";
+  var height = document.getElementsByClassName(streamType + "-online")[0].offsetHeight;
+  var headingMargins = document.getElementsByClassName("fullscreen")[0].offsetHeight/25;
+  console.log(headingMargins);
+  var headingHeight = document.getElementsByClassName(streamType + "-heading")[0].offsetHeight + headingMargins;
+  console.log(headingHeight, height);
+  document.getElementsByClassName(streamType + "-featured")[0].style.height = height + headingHeight + "px";
+  document.getElementsByClassName(streamType + "-online")[0].style.top = (headingHeight/height) * 100 + "%";
       }
 
 function streamerSearch() {
 	var json, generator;
 	searchTerm = document.getElementsByClassName("search-bar")[0].value;
-	getJSON(searchTerm);
-	json = data;
-	if (json.stream === null){
-		generator = '<div class = "search-result-inner"><h3>' + searchTerm + ' is offline!</h3></div>';
-		document.getElementsByClassName("search-result-div")[0].style.padding = "3vh 0";
-	} else {
-		generator = htmlGenerator(json, false);
-	}
-	document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
+  if (searchTerm !== ""){
+    getJSON(searchTerm);
+    json = data;
+    if (json.stream === null){
+      generator = '<div class = "search-result-inner"><h3>' + searchTerm + ' is offline!</h3></div>';
+      document.getElementsByClassName("search-result-div")[0].style.padding = "3vh 0";
+    } else {
+      generator = htmlGenerator(json, false);
+    }
+    document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
+  }
 }
 
 function getArrayStreams(streamType, streamArr) {
@@ -142,9 +118,9 @@ function getArrayStreams(streamType, streamArr) {
   var online = [];
   var offline =[];
   document.getElementsByClassName("freecodecamp-featured")[0].innerHTML = 
-  "<h2>FFC Recommended Streams</h2><div class = 'freecodecamp-online'></div><div class = 'freecodecamp-offline'></div>";
+  "<h2 class = 'freecodecamp-heading'>FFC Recommended Streams</h2><div class = 'freecodecamp-online'></div><div class = 'freecodecamp-offline'></div>";
   document.getElementsByClassName("brad-featured")[0].innerHTML = 
-  "<h2>Brad's Recommended Streams</h2><div class = 'brad-online'></div><div class = 'brad-offline'></div>";
+  "<h2 class = 'brad-heading'>Brad's Recommended Streams</h2><div class = 'brad-online'></div><div class = 'brad-offline'></div>";
   console.log("getting" + streamType + "streams!");
   for (var i = 0; i < streamArr.length; i++){
     getJSON(streamArr[i]);
@@ -153,15 +129,16 @@ function getArrayStreams(streamType, streamArr) {
       online.push(streamArr[i]);
       onlineGenerator = htmlGenerator(json, false);
       document.getElementsByClassName(streamType + "-online")[0].innerHTML += onlineGenerator;
-      divHeights += document.getElementsByClassName("height-set")[0].offsetHeight;
     } else {
       offline.push(streamArr[i]);
     }
   }
-  console.log("people online = " + online.length, "people offline = " + offline, json);
+  for (var j = 0; j < online.length; j++){
+      divHeights += document.getElementsByClassName("height-set")[j].offsetHeight;
+  }
   margins = online.length * 6;
-  document.getElementsByClassName(streamType + "-featured")[0].style.height = "calc(" + margins + "vh + " + divHeights + "px)";
-  whatShouldTopBe(streamType, online, "online");
+  console.log("people online = " + online.length, "people offline = " + offline.length, json);
+  whatShouldTopAndHeightsBe(streamType, margins, divHeights);
   for (var k = 0; k < offline.length; k++){
     document.getElementsByClassName(streamType + "-offline")[0].innerHTML += '<div class = "search-result-inner"><h3>' 
     + offline[k] + ' is offline!</h3></div>';
@@ -195,6 +172,22 @@ function brad(button) {
 function twitch(button) {
 	tabSwitch(button);
 	getTwitchStreams();
+}
+
+function refresh () {
+  var whosStreams;
+  for (var i = 0; i < 3; i++){
+    if (document.getElementsByClassName("tab")[i].contains(document.getElementById("active"))){
+      whosStreams = document.getElementsByClassName("tab")[i].id;
+    }
+  }
+  if (whosStreams === "freecodecamp"){
+    getArrayStreams('freecodecamp', fccStreams);
+  } else if (whosStreams === "brad"){
+    getArrayStreams("brad", bradStreams);
+  } else {
+    getTwitchStreams();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
