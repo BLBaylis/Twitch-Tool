@@ -32,7 +32,7 @@ function getJSON(query) {
   request.send();
 }
 
-function htmlGenerator (json, isItTwitch, i) {
+function htmlGenerator (json, isItTwitch, isItSearch, i) {
   if (isItTwitch) {
     var generator = '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + 
         json.featured[i].stream.channel.display_name + '"><h3>'
@@ -46,8 +46,17 @@ function htmlGenerator (json, isItTwitch, i) {
               + json.featured[i].stream.channel.display_name + '</a></h4></div>';
 
 
-  } else {
+  } else if (isItSearch) {
       generator = 
+        '<span class = "button-span"><button class = "close">&times;</button></span><div class = "featured-streamer height-set featured-streamer-search"><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3>'
+         + json.stream.channel.status + '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
+         encodeURIComponent(json.stream.channel.game) + '">'
+          + json.stream.channel.game + '</h4></a><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + 
+          '"><img src = "' + json.stream.preview.medium + '" class = "img"></img></a><h4>' + json.stream.viewers +
+              ' viewers on <a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '">' 
+              + json.stream.channel.display_name + '</a></h4></div>';
+  } else {
+    generator = 
         '<div class = "featured-streamer height-set"><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3>'
          + json.stream.channel.status + '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.stream.channel.game) + '">'
@@ -55,6 +64,7 @@ function htmlGenerator (json, isItTwitch, i) {
           '"><img src = "' + json.stream.preview.medium + '" class = "img"></img></a><h4>' + json.stream.viewers +
               ' viewers on <a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '">' 
               + json.stream.channel.display_name + '</a></h4></div>';
+
   }
   return generator;
 }
@@ -103,12 +113,18 @@ function streamerSearch() {
     getJSON(searchTerm);
     json = data;
     if (json.stream === null){
-      generator = '<div class = "search-result-inner"><h3>' + searchTerm + ' is offline!</h3></div>';
-      document.getElementsByClassName("search-result-div")[0].style.padding = "3vh 0";
+      generator = '<span class = "button-span"><button class = "close">&times;</button></span><div class = "search-result-inner"><h3>' + 
+      searchTerm + ' is offline!</h3></div>';
+      document.getElementsByClassName("search-result-div")[0].style.padding = " 0 0 2vh 0";
     } else {
-      generator = htmlGenerator(json, false);
+      generator = htmlGenerator(json, false, true);
     }
     document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
+    document.getElementsByClassName("button-span")[0].style.display = "inline-block";
+    document.getElementsByClassName("close")[0].addEventListener("click", function(){
+      document.getElementsByClassName("search-result-div")[0].innerHTML = "";
+      document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
+    });
   }
 }
 
@@ -127,7 +143,7 @@ function getArrayStreams(streamType, streamArr) {
     json = data;
     if (json.stream !== null){
       online.push(streamArr[i]);
-      onlineGenerator = htmlGenerator(json, false);
+      onlineGenerator = htmlGenerator(json, false, false);
       document.getElementsByClassName(streamType + "-online")[0].innerHTML += onlineGenerator;
     } else {
       offline.push(streamArr[i]);
@@ -153,7 +169,7 @@ function getTwitchStreams() {
   getJSON("featured");
   json = data;
   for (var i = 0; i < json.featured.length; i++){
-        generator = htmlGenerator(json, true, i);
+        generator = htmlGenerator(json, true, false, i);
         document.getElementsByClassName("twitch-featured")[0].innerHTML += generator;
         }
     }
