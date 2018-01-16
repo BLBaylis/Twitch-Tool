@@ -1,78 +1,73 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Brad's Twitch.Tv Tool</title>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="twitchstyle.css">
-	<script src="https://use.fontawesome.com/dee45a8958.js" > </script>
-	<script type="text/javascript" src = "twitchscript.js"></script>
-</head>
-<body>
-	<div class = "fullscreen">
+	<head>
+		<title>Brad's Twitch.Tv Tool</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+		<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="twitchstyle.css">
+		<script src="https://use.fontawesome.com/dee45a8958.js" > </script>
+		<script type="text/javascript" src = "twitchscript.js"></script>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<h1>Brad's</h1><img class = "svg" src="twitch.svg"><h1>Tool</h1>
 
-<!--
-HEADING
--->
+		<!--
+		STREAMER SEARCH
+		-->
 
-	<h1 onclick = "offlineOnline()" class = "main-heading">Brad's</h1><img class = "svg" src="twitch.svg"><h1 onclick = "offlineOnline()">Tool</h1>
-
-<!--
-STREAMER SEARCH
--->
-
-	<div class="streamer-search">
-		<input class = "search-bar" type="text" placeholder="Type streamer name here..."></input>
-		<button class = "search-bar-btn" type="submit" onclick = "streamerSearch()">Search</button>
-	</div>
-	<div class = "search-result-div"><span class = "button-span"><button class = "close">&times;</button></span></div>
-	<button onclick = "refresh()" class = "refresh-streams"><i class = "fa fa-refresh" aria-hidden="true"></i>   Refresh Streams</button>
-
-<!--
-STREAMS-DIV
--->
-
-	<div class = "streams-div">
-
-	<!--
-	TABS
-	-->
-
-		<div class = "tab-div">
-			<div class = "tab" id = "freecodecamp" onclick = "fcc(this)"><button><div class = "freecodecamp-inner-tab-div inner-tab-div" id = "active">FCC's Streams</div></button></div>
-			<div class = "tab" id = "twitch" onclick = "twitch(this)"><button><div class = "twitch-inner-tab-div inner-tab-div">Twitch Featured</div></button></div>
-			<div class = "tab" id = "brad" onclick = "brad(this)"><button><div class = "brad-inner-tab-div inner-tab-div">Brad's Streams</div></button></div>
+		<div class="streamer-search">
+			<input class = "search-bar" type="text" placeholder="Type streamer name here..."></input>
+			<button class = "search-bar-btn" type="submit">Search</button>
 		</div>
+		<div class = "search-result-div"><span class = "button-span"><button class = "close">&times;</button></span></div>
+		<button class = "refresh-streams"><i class = "fa fa-refresh" aria-hidden="true"></i>   Refresh Streams</button>
 
-	<!--
-	FCC STREAMS
-	-->
-
-		<div class = "freecodecamp-featured featured" id = "show">
-			<h2 class = "freecodecamp-heading">FCC Recommended Streams</h2>
-			<div class = "freecodecamp-offline"></div>
-			<div class = "freecodecamp-online"></div>
+		
+		<div class = "streams-div">
+			<div class = "tab-div">
+				<div class = "big-tab tab" id = "freecodecamp"><button><div class = "freecodecamp-inner-tab-div inner-tab-div" id = "active">FCC's Streams</div></button></div>
+				<div class = "tab" id = "twitch"><button><div class = "twitch-inner-tab-div inner-tab-div">Twitch Featured</div></button></div>
+				<div class = "tab" id = "brad"><button><div class = "brad-inner-tab-div inner-tab-div">Brad's Streams</div></button></div>
 		</div>
-
-	<!--
-	TWITCH STREAMS
-	-->
-
-		<div class = "twitch-featured featured">
-			<h2>Featured by Twitch.Tv</h2>
-		</div>
-
-	<!--
-	BRAD STREAMS
-	-->
-
-		<div class = "brad-featured featured">
-			<h2 class = "brad-heading">Brad's Recommended Streams</h2>
-			<div class = "brad-offline"></div>
-			<div class = "brad-online"></div>
-		</div>
-	</div>
-</div>
-
-</body>
+			<div class = "freecodecamp-featured featured" id = "show">
+				<h2>Freecodecamp's Recommended Streams</h2>
+				<div class = "freecodecamp-navbar navbar">
+					<a class = "navbar-btn btn-online">Online</a>
+					<a class = "navbar-btn btn-all">All</a>
+					<a class = "navbar-btn btn-offline">Offline</a>
+				</div>
+				<div class = "alert"></div>
+				<div class = "freecodecamp-outer outer"> 
+  					<div class = "freecodecamp-inner inner freecodecamp-online online">
+  					</div>
+  					<div class = "freecodecamp-inner inner freecodecamp-all all" id = "on-off-all">
+  					</div>
+  					<div class = "freecodecamp-inner inner freecodecamp-offline offline">
+  					</div>
+  				</div>
+  			</div>
+  			<div class = "twitch-featured featured">
+				<h2>Featured by Twitch.Tv</h2>
+				<div class = "alert"></div>
+				<div class = "twitch-outer outer"></div>
+			</div>
+  			<div class = "brad-featured featured">
+				<h2>Brad's Recommended Streams</h2>
+				<div class = "brad-navbar navbar">
+					<a class = "navbar-btn btn-online">Online</a>
+					<a class = "navbar-btn btn-all">All</a>
+					<a class = "navbar-btn btn-offline">Offline</a>					
+				</div>
+				<div class = "alert"></div>
+				<div class = "brad-outer outer"> 
+  					<div class = "brad-inner inner brad-online online">
+  					</div>
+  					<div class = "brad-inner inner brad-all all">
+  					</div>
+  					<div class = "brad-inner inner brad-offline offline">
+  					</div>
+  				</div>
+  			</div>
+	</body>
 </html>

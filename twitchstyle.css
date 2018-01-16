@@ -100,6 +100,7 @@ body, html {
 	height : 100%;
 	text-align  : center;
 	background-color : #fff;
+	font-family : 'Roboto', sans-serif;
 }
 
 h1 {
@@ -135,12 +136,6 @@ input {
 	width : 75%;
 	float : left;
 	padding-left: 3%;
-}
-
-.fullscreen {
-	font-family : "Roboto", sans-serif;
-	height : 100%;
-	width : 100%;
 }
 
 .svg {
@@ -215,20 +210,38 @@ input {
 .streams-div{
 	width : 90%;
 	margin : 1vh auto;
+	color : #fff;
 }
 
 .tab-div {
+	position : relative;
 	border-bottom : none;
 	height : 10vh;
 	width : 100%;
+	border:  none;
 }
 
 .tab {
+	position : absolute;
 	display : inline-block;
-	width : 29.6%;
-	height : 100%;
+	width : 29%;
+	height : 90%;
 	border-top-left-radius : 25px;
 	border-top-right-radius: 25px;
+	bottom: 0;
+	border : none;
+}
+
+#freecodecamp {
+	left : 0;
+}
+
+#brad {
+	left : 71%;
+}
+
+#twitch {
+	left : 41%;
 }
 
 .tab-div button {
@@ -251,48 +264,75 @@ input {
 	border-bottom : solid #fff;
 }
 
+.big-tab {
+	height : 100%;
+	width  :40%;
+
+}
+
 .featured {
-	padding : 3vh 0;
-	position : relative;
 	display : none;
-    width : 100%;
-    background-color : #6441a5;
-    overflow : hidden;
-    margin-bottom : 3vh;
-    color : #fff;
-}
-
-.freecodecamp-online, .freecodecamp-offline, .brad-online, .brad-online {
-	position : absolute;
-	top : 20%;
-	left : 0;
-	display : inline-block;
 	width : 100%;
-	background-color : #6441a5;
-	transition : left 200ms ease-in-out;
-	color : #fff;
+	margin : 0 auto;
+	padding : 3vh 0;
+	background-color: #6441a5;
+	border : none;
 }
 
-.freecodecamp-offline, .brad-offline {
-	left : 100%;
+#show {
+	display : block;
 }
 
-.move-online {
-	left : -100%;
+.navbar {
+	height : 10vh;
+	background-color: #eee;
+	margin : 4vh 0 0 0;
 }
 
-.move-offline {
-	left : 0;
+.navbar-btn {
+	background-color : #eee;
+	color : black;
+	height : 100%;
+	width : 33.3333333%;
+	float : left;
+	border : none;
+	text-decoration : none;
+	line-height : 10vh;
+	font-size : 25px;
+}
+
+.navbar-btn:hover{
+	color : #6441a5;
+}
+
+.outer {
+  	position : relative;
+  	width : 100%;
+  	margin : 0 auto;
+ 	overflow : hidden;
+ 	transition : height 300ms ease-in-out;
+}
+
+.inner {
+ 	position : absolute;
+ 	width : 100%;
+ 	transition : left 300ms ease-in-out;
+ 	padding : 0 0 3vh 0;
+}
+
+.online {
+  	left : -100%;
+}
+
+.offline {
+  	left : 100%;
 }
 
 .featured-streamer{
 	display: inline-block;
+  	text-align : center;
 	width : 90%;
-	margin : 3vh 0;
-}
-
-.featured-streamer-search {
-	margin-top : 0;
+	margin : 3vh auto;
 }
 
 a {
@@ -310,6 +350,12 @@ a:hover {
 	margin : 0 auto;
 }
 
-#show {
+.status {
+	width : 100%;
+}
+
+.logo {
 	display : block;
+	margin : 1vh auto;
+	width : 30%;
 }

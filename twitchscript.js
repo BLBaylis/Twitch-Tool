@@ -1,38 +1,90 @@
-var data;
-var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "storbeck", "habathcx"];
+document.addEventListener("DOMContentLoaded", function() {
+  getArrayStreams("freecodecamp", fccStreams);
+  for (var i = 0; i < 3 ; i++){
+    left = (i-1) * 100;
+    left += "%";
+    document.getElementsByClassName("freecodecamp-inner")[i].style.left = left;
+  }
+  for (var j = 0; j < 3 ; j++){
+    left = (j-1) * 100;
+    left += "%";
+    document.getElementsByClassName("brad-inner")[j].style.left = left;
+  }
+  heights("freecodecamp");
+  document.getElementsByClassName("search-bar-btn")[0].addEventListener("click", streamerSearch);
+  document.getElementsByClassName("refresh-streams")[0].addEventListener("click", refresh);
+  document.getElementById("freecodecamp").addEventListener("click", fcc);
+  document.getElementById("brad").addEventListener("click", brad);
+  document.getElementById("twitch").addEventListener("click", twitch);
+  for (var j = 0; j < document.getElementsByClassName("navbar-btn").length; j++) {
+    document.getElementsByClassName("navbar-btn")[j].addEventListener("click", distanceAndDirectionForSlide);
+  }
+});
+
+var json, left;
 var bradStreams = ["foggedftw2", "boxerpete", "neace", "imaqtpie", "loltyler1", "tobiasfate", "karnrs"];
-var offlineShowing = false;
+var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+ 
+function tabSwitch(tab) {
+  for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
+    document.getElementsByClassName("featured")[i].id = "";
+    document.getElementsByClassName("inner-tab-div")[i].id = "";
+  }
+  document.getElementsByClassName(tab.id + "-featured")[0].id = "show";
+  document.getElementsByClassName(tab.id + "-inner-tab-div")[0].id = "active";
+  document.getElementsByClassName("big-tab")[0].classList.remove("big-tab");
+  document.getElementById(tab.id).classList.add("big-tab");
+  leftAdjust();
+}
+
+function leftAdjust() {
+  if (document.getElementById("freecodecamp").classList.contains("big-tab")) {
+    document.getElementById("freecodecamp").style.left = 0;
+    document.getElementById("twitch").style.left = 41 + "%";
+    document.getElementById("brad").style.left = 71 + "%";
+  } else if (document.getElementById("twitch").classList.contains("big-tab")){
+    document.getElementById("freecodecamp").style.left = 0;
+    document.getElementById("twitch").style.left = 30 + "%";
+    document.getElementById("brad").style.left = 71 + "%";
+  } else {
+    document.getElementById("freecodecamp").style.left = 0;
+    document.getElementById("twitch").style.left = 30 + "%";
+    document.getElementById("brad").style.left = 60 + "%";
+  }
+
+}
 
 function getJSON(query) {
+  for (var j = 0; j < document.getElementsByClassName("alert").length; j++) {
+        document.getElementsByClassName("alert")[j].innerHTML = "";
+      }
   var request = new XMLHttpRequest();
   request.open(
     "GET",
-    "https://wind-bow.glitch.me/twitch-api/streams/" + query,
+    "https://wind-bow.glitch.me/twitch-api/" + query,
     false
   );
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
-      console.log("success");
-      data = JSON.parse(this.response);
-      console.log(data);
+      json = JSON.parse(this.response);
     } else {
-      for (var i = 0; i < document.getElementsByClassName("featured").length; i++) {
-        document.getElementsByClassName("featured")[i].innerHTML += "We reached our target server, but it returned an error.";
+      for (var i = 0; i < document.getElementsByClassName("alert").length; i++) {
+        document.getElementsByClassName("alert")[i].innerHTML = "We reached our target server, but it returned an error.";
       }
     }
   };
 
   request.onerror = function() {
-    for (var i = 0; i < document.getElementsByClassName("featured").length; i++) {
-        document.getElementsByClassName("featured")[i].innerHTML += "There was a connection error of some sort.";
+    for (var i = 0; i < document.getElementsByClassName("alert").length; i++) {
+        document.getElementsByClassName("alert")[i].innerHTML = "There was a connection error of some sort.";
       }
     }
 
   request.send();
 }
 
-function htmlGenerator (json, isItTwitch, isItSearch, i) {
+function htmlGenerator (isItTwitch, isItSearch, i) {
   if (isItTwitch) {
     var generator = '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + 
         json.featured[i].stream.channel.display_name + '"><h3>'
@@ -57,7 +109,7 @@ function htmlGenerator (json, isItTwitch, isItSearch, i) {
               + json.stream.channel.display_name + '</a></h4></div>';
   } else {
     generator = 
-        '<div class = "featured-streamer height-set"><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3>'
+        '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3>'
          + json.stream.channel.status + '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.stream.channel.game) + '">'
           + json.stream.channel.game + '</h4></a><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + 
@@ -69,125 +121,28 @@ function htmlGenerator (json, isItTwitch, isItSearch, i) {
   return generator;
 }
 
-function tabSwitch(tab) {
-	console.log("tabSwitch() called for " + tab.id);
-	for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
-		document.getElementsByClassName("featured")[i].id = "";
-    document.getElementsByClassName("inner-tab-div")[i].id = "";
-	}
-	document.getElementsByClassName(tab.id + "-featured")[0].id = "show";
-  document.getElementsByClassName(tab.id + "-inner-tab-div")[0].id = "active";
-}
-
-function offlineOnline() {
-  if (!offlineShowing) {
-		document.getElementsByClassName("freecodecamp-online")[0].classList.add("move-online");
-		document.getElementsByClassName("freecodecamp-offline")[0].classList.add("move-offline");
-		document.getElementsByClassName("brad-online")[0].classList.add("move-online");
-		document.getElementsByClassName("brad-offline")[0].classList.add("move-offline");
-		offlineShowing = true;
-  } else {
-	  document.getElementsByClassName("freecodecamp-online")[0].classList.remove("move-online");
-	  document.getElementsByClassName("freecodecamp-offline")[0].classList.remove("move-offline");
-	  document.getElementsByClassName("brad-online")[0].classList.remove("move-online");
-	  document.getElementsByClassName("brad-offline")[0].classList.remove("move-offline");
-	  offlineShowing = false;
-  }
-}
-
-function whatShouldTopAndHeightsBe(streamType, margins, divHeights) {
-  document.getElementsByClassName(streamType + "-online")[0].style.height = "calc(" + margins + "vh + " + divHeights + "px)";
-  var height = document.getElementsByClassName(streamType + "-online")[0].offsetHeight;
-  var headingMargins = document.getElementsByClassName("fullscreen")[0].offsetHeight/25;
-  console.log(headingMargins);
-  var headingHeight = document.getElementsByClassName(streamType + "-heading")[0].offsetHeight + headingMargins;
-  console.log(headingHeight, height);
-  document.getElementsByClassName(streamType + "-featured")[0].style.height = height + headingHeight + "px";
-  document.getElementsByClassName(streamType + "-online")[0].style.top = (headingHeight/height) * 100 + "%";
-      }
-
 function streamerSearch() {
-	var json, generator;
-	searchTerm = document.getElementsByClassName("search-bar")[0].value;
+  var generator;
+  searchTerm = document.getElementsByClassName("search-bar")[0].value;
   if (searchTerm !== ""){
-    getJSON(searchTerm);
-    json = data;
+    getJSON("streams/" + searchTerm);
     if (json.stream === null){
-      generator = '<span class = "button-span"><button class = "close">&times;</button></span><div class = "search-result-inner"><h3>' + 
-      searchTerm + ' is offline!</h3></div>';
+      getJSON("channels/" + searchTerm);
+      generator = 
+      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "search-result-inner"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
+      + searchTerm + '">' + searchTerm + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/'
+       + searchTerm + '"><img class = "logo" src="' + json.logo + '"></a></div>';
       document.getElementsByClassName("search-result-div")[0].style.padding = " 0 0 2vh 0";
     } else {
-      generator = htmlGenerator(json, false, true);
+      generator = htmlGenerator(false, true);
     }
     document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
     document.getElementsByClassName("button-span")[0].style.display = "inline-block";
     document.getElementsByClassName("close")[0].addEventListener("click", function(){
-      document.getElementsByClassName("search-result-div")[0].innerHTML = "";
-      document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
+    document.getElementsByClassName("search-result-div")[0].innerHTML = "";
+    document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
     });
   }
-}
-
-function getArrayStreams(streamType, streamArr) {
-  var json, onlineGenerator, offlineGenerator, margins;
-  var divHeights = 0;
-  var online = [];
-  var offline =[];
-  document.getElementsByClassName("freecodecamp-featured")[0].innerHTML = 
-  "<h2 class = 'freecodecamp-heading'>FFC Recommended Streams</h2><div class = 'freecodecamp-online'></div><div class = 'freecodecamp-offline'></div>";
-  document.getElementsByClassName("brad-featured")[0].innerHTML = 
-  "<h2 class = 'brad-heading'>Brad's Recommended Streams</h2><div class = 'brad-online'></div><div class = 'brad-offline'></div>";
-  console.log("getting" + streamType + "streams!");
-  for (var i = 0; i < streamArr.length; i++){
-    getJSON(streamArr[i]);
-    json = data;
-    if (json.stream !== null){
-      online.push(streamArr[i]);
-      onlineGenerator = htmlGenerator(json, false, false);
-      document.getElementsByClassName(streamType + "-online")[0].innerHTML += onlineGenerator;
-    } else {
-      offline.push(streamArr[i]);
-    }
-  }
-  for (var j = 0; j < online.length; j++){
-      divHeights += document.getElementsByClassName("height-set")[j].offsetHeight;
-  }
-  margins = online.length * 6;
-  console.log("people online = " + online.length, "people offline = " + offline.length, json);
-  whatShouldTopAndHeightsBe(streamType, margins, divHeights);
-  for (var k = 0; k < offline.length; k++){
-    document.getElementsByClassName(streamType + "-offline")[0].innerHTML += '<div class = "search-result-inner"><h3>' 
-    + offline[k] + ' is offline!</h3></div>';
-  }
-}
-
-
-function getTwitchStreams() {
-  var json, generator;
-  document.getElementsByClassName("twitch-featured")[0].innerHTML = "<h2>Featured by Twitch.Tv</h2>";
-  console.log("getting Twitch streams!");
-  getJSON("featured");
-  json = data;
-  for (var i = 0; i < json.featured.length; i++){
-        generator = htmlGenerator(json, true, false, i);
-        document.getElementsByClassName("twitch-featured")[0].innerHTML += generator;
-        }
-    }
-
-function fcc(button) {
-	tabSwitch(button);
-	getArrayStreams('freecodecamp', fccStreams);
-
-}
-
-function brad(button) {
-	tabSwitch(button);
-	getArrayStreams("brad", bradStreams);
-}
-
-function twitch(button) {
-	tabSwitch(button);
-	getTwitchStreams();
 }
 
 function refresh () {
@@ -206,7 +161,129 @@ function refresh () {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-	getArrayStreams('freecodecamp', fccStreams);
-});
 
+function getArrayStreams(recommendedBy, arr){
+  var offlineArr = [];
+  var generator;
+  document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML = "";
+  document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML = "";
+  document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML = "";
+  for (var i = 0; i < arr.length; i++){
+    getJSON("/streams/" + arr[i]);
+    if (json.stream !== null){
+      generator = htmlGenerator(false, false);
+      document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += generator;
+      document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML += generator;
+    } else {
+      offlineArr.push(arr[i]);
+    }
+  }
+  for (var j = 0; j < offlineArr.length; j++){
+    getJSON("channels/" + offlineArr[j]);
+    document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML += 
+    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + offlineArr[j] + '">' + offlineArr[j] + 
+    '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + offlineArr[j] + '"><img class = "logo" src="' + json.logo + '"></a></div>';
+    document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += 
+    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + offlineArr[j] + '">' + offlineArr[j] + 
+    '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + offlineArr[j] + '"><img class = "logo" src="' + json.logo + '"></a></div>';
+    }
+}
+
+function getTwitchStreams() {
+  var generator;
+  document.getElementsByClassName("twitch-outer")[0].innerHTML = "";
+  getJSON("streams/featured");
+  for (var i = 0; i < json.featured.length; i++){
+        generator = htmlGenerator(true, false, i);
+        document.getElementsByClassName("twitch-outer")[0].innerHTML += generator;
+        }
+    }
+
+function heights(recommendedBy) {
+  var active = Number(removePercent(document.getElementsByClassName(recommendedBy + "-inner")[0].style.left));
+  var height1 = document.getElementsByClassName(recommendedBy + "-online")[0].offsetHeight;
+  var height2 = document.getElementsByClassName(recommendedBy + "-all")[0].offsetHeight;
+  var height3 = document.getElementsByClassName(recommendedBy + "-offline")[0].offsetHeight;
+  if (active === -200){
+    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height3 + "px";
+  } else if (active === -100){
+    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height2 + "px";
+  } else {
+    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height1 + "px";
+  }
+  
+}
+
+function distanceAndDirectionForSlide(button) {
+  var currLocation, destination, distance, direction;
+  var arr = ["online", "all", "offline"];
+  if (button.target.classList.contains("btn-online")){
+    destination = "online";
+  } else if (button.target.classList.contains("btn-offline")){
+    destination = "offline";
+  } else {
+    destination = "all";
+  }
+  var currLocation = document.getElementById("on-off-all").classList[3];
+  distance = arr.indexOf(currLocation) - arr.indexOf(destination);
+  if (distance < 0){
+    direction = "left";
+  } else {
+    direction = "right";
+  }
+  distance = Math.abs(distance);
+  slide(direction, distance);
+  document.getElementById("on-off-all").id = "";
+  document.getElementsByClassName(destination)[0].id = "on-off-all";
+}
+
+function removePercent(toBeTrimmed) {
+  var trimmed = toBeTrimmed.slice(0, toBeTrimmed.length -1);
+  return trimmed;
+}
+
+function slide(direction, distance) {
+  var bradResult, fccResult;
+  var check = Number(removePercent(document.getElementsByClassName("freecodecamp-inner")[0].style.left));
+  for (var i = 0; i < 3; i++){
+    fccResult = Number(removePercent(document.getElementsByClassName("freecodecamp-inner")[i].style.left));
+    bradResult = Number(removePercent(document.getElementsByClassName("brad-inner")[i].style.left));
+    if (check > -200 && direction === "left" && distance === 1){
+      bradResult -= 100;
+      fccResult -= 100;    
+    } else if (check > -100 && direction === "left" && distance === 2){
+      bradResult -= 200;
+      fccResult -= 200; 
+    } else if (check < 0 && direction === "right" && distance === 1){
+      bradResult = bradResult + 100;
+      fccResult = fccResult + 100;  
+    } else if (check < -100 && direction === "right" && distance === 2){
+      bradResult += 200;
+      fccResult += 200;
+    }
+    bradResult = bradResult + "%";
+    fccResult = fccResult + "%";
+    document.getElementsByClassName("freecodecamp-inner")[i].style.left = fccResult;
+    document.getElementsByClassName("brad-inner")[i].style.left = bradResult;  
+    } 
+  heights("freecodecamp");
+  heights("brad");
+}
+
+function fcc(button) {
+  tabSwitch(button.target.offsetParent);
+  getArrayStreams('freecodecamp', fccStreams);
+  heights("freecodecamp");
+
+}
+
+function brad(button) {
+  tabSwitch(button.target.offsetParent);
+  getArrayStreams("brad", bradStreams);
+  heights("brad");
+}
+
+function twitch(button) {
+  tabSwitch(button.target.offsetParent);
+  getTwitchStreams();
+}
