@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
   getArrayStreams("freecodecamp", fccStreams);
+  getArrayStreams("brad", bradStreams);
+  getTwitchStreams();
   for (var i = 0; i < 3 ; i++){
     left = (i-1) * 100;
     left += "%";
@@ -10,31 +12,33 @@ document.addEventListener("DOMContentLoaded", function() {
     left += "%";
     document.getElementsByClassName("brad-inner")[j].style.left = left;
   }
-  heights("freecodecamp");
   document.getElementsByClassName("search-bar-btn")[0].addEventListener("click", streamerSearch);
   document.getElementsByClassName("refresh-streams")[0].addEventListener("click", refresh);
-  document.getElementById("freecodecamp").addEventListener("click", fcc);
-  document.getElementById("brad").addEventListener("click", brad);
-  document.getElementById("twitch").addEventListener("click", twitch);
+  document.getElementById("freecodecamp").addEventListener("click", tabSwitch);
+  document.getElementById("brad").addEventListener("click", tabSwitch);
+  document.getElementById("twitch").addEventListener("click", tabSwitch);
   for (var j = 0; j < document.getElementsByClassName("navbar-btn").length; j++) {
     document.getElementsByClassName("navbar-btn")[j].addEventListener("click", distanceAndDirectionForSlide);
   }
 });
 
-var json, left;
+var left;
 var bradStreams = ["foggedftw2", "boxerpete", "neace", "imaqtpie", "loltyler1", "tobiasfate", "karnrs"];
 var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
  
-function tabSwitch(tab) {
+function tabSwitch(event) {
+  event = event.target.offsetParent;
   for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
     document.getElementsByClassName("featured")[i].id = "";
     document.getElementsByClassName("inner-tab-div")[i].id = "";
   }
-  document.getElementsByClassName(tab.id + "-featured")[0].id = "show";
-  document.getElementsByClassName(tab.id + "-inner-tab-div")[0].id = "active";
+  document.getElementsByClassName(event.id + "-featured")[0].id = "show";
+  document.getElementsByClassName(event.id + "-inner-tab-div")[0].id = "active";
   document.getElementsByClassName("big-tab")[0].classList.remove("big-tab");
-  document.getElementById(tab.id).classList.add("big-tab");
+  document.getElementById(event.id).classList.add("big-tab");
   leftAdjust();
+  heights("freecodecamp");
+  heights("brad");
 }
 
 function leftAdjust() {
@@ -51,40 +55,68 @@ function leftAdjust() {
     document.getElementById("twitch").style.left = 30 + "%";
     document.getElementById("brad").style.left = 60 + "%";
   }
-
 }
 
-function getJSON(query) {
+function replaceStreamWithChannel(toBeReplaced){
+  var replaced = toBeReplaced.replace("streams", "channels");
+  return replaced;
+}
+
+function getJSONPromise(query, recommendedBy){
+    return new Promise(function(resolve, reject){
+      var request = new XMLHttpRequest();
+      request.open(
+        "GET",
+        "https://wind-bow.glitch.me/twitch-api" + query,
+        true
+        );
+
+      request.onload = function() {
+        if (this.status >= 200 && this.status < 400) {
+          resolve(JSON.parse(this.response));
+        } else {
+          reject("We reached our target server, but it returned an error.");
+          for (var i = 0; i < document.getElementsByClassName("alert").length; i++) {
+            document.getElementsByClassName("alert")[i].innerHTML = "We reached our target server, but it returned an error.";
+          }
+        }
+      };
+
+      request.onerror = function() {
+        reject("There was a connection error of some sort.");
+        for (var i = 0; i < document.getElementsByClassName("alert").length; i++) {
+          document.getElementsByClassName("alert")[i].innerHTML = "There was a connection error of some sort.";
+        }
+      }
+
+      request.send();
+    })
+  }
+
+function getJSON(query, recommendedBy) {
   for (var j = 0; j < document.getElementsByClassName("alert").length; j++) {
         document.getElementsByClassName("alert")[j].innerHTML = "";
       }
-  var request = new XMLHttpRequest();
-  request.open(
-    "GET",
-    "https://wind-bow.glitch.me/twitch-api/" + query,
-    false
-  );
 
-  request.onload = function() {
-    if (this.status >= 200 && this.status < 400) {
-      json = JSON.parse(this.response);
+  var promise = getJSONPromise(query, recommendedBy);
+  promise.then(function(json){
+    if (json.stream !== undefined){
+      if (json.stream !== null){
+        streamerOnline(json, recommendedBy);
+      } else {
+        var offlineQuery = replaceStreamWithChannel(query);
+        getJSON(offlineQuery, recommendedBy);
+      }
     } else {
-      for (var i = 0; i < document.getElementsByClassName("alert").length; i++) {
-        document.getElementsByClassName("alert")[i].innerHTML = "We reached our target server, but it returned an error.";
-      }
-    }
-  };
+      streamerOffline(json, recommendedBy);
+  }
+}).catch(function(error){
+    console.log(error);
+  });
 
-  request.onerror = function() {
-    for (var i = 0; i < document.getElementsByClassName("alert").length; i++) {
-        document.getElementsByClassName("alert")[i].innerHTML = "There was a connection error of some sort.";
-      }
-    }
-
-  request.send();
 }
 
-function htmlGenerator (isItTwitch, isItSearch, i) {
+function htmlGenerator (json, isItTwitch, isItSearch, i) {
   if (isItTwitch) {
     var generator = '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + 
         json.featured[i].stream.channel.display_name + '"><h3>'
@@ -100,7 +132,8 @@ function htmlGenerator (isItTwitch, isItSearch, i) {
 
   } else if (isItSearch) {
       generator = 
-        '<span class = "button-span"><button class = "close">&times;</button></span><div class = "featured-streamer height-set featured-streamer-search"><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3>'
+        '<span class = "button-span"><button class = "close">&times;</button></span><div class = "featured-streamer height-set featured-streamer-search"><a target = "_blank" href = "https://www.twitch.tv/'
+         + json.stream.channel.display_name + '"><h3>'
          + json.stream.channel.status + '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.stream.channel.game) + '">'
           + json.stream.channel.game + '</h4></a><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + 
@@ -123,81 +156,91 @@ function htmlGenerator (isItTwitch, isItSearch, i) {
 
 function streamerSearch() {
   var generator;
-  searchTerm = document.getElementsByClassName("search-bar")[0].value;
+  var searchTerm = document.getElementsByClassName("search-bar")[0].value;
   if (searchTerm !== ""){
-    getJSON("streams/" + searchTerm);
-    if (json.stream === null){
-      getJSON("channels/" + searchTerm);
-      generator = 
-      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "search-result-inner"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
-      + searchTerm + '">' + searchTerm + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/'
-       + searchTerm + '"><img class = "logo" src="' + json.logo + '"></a></div>';
-      document.getElementsByClassName("search-result-div")[0].style.padding = " 0 0 2vh 0";
-    } else {
-      generator = htmlGenerator(false, true);
-    }
-    document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
-    document.getElementsByClassName("button-span")[0].style.display = "inline-block";
-    document.getElementsByClassName("close")[0].addEventListener("click", function(){
-    document.getElementsByClassName("search-result-div")[0].innerHTML = "";
-    document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
+    var promise = getJSONPromise("/streams/" + searchTerm);
+    promise.then(function(json){
+      if (json.stream !== undefined){
+        if (json.stream !== null){
+          generator = htmlGenerator(json, false, true);
+          searchResultDecoration(generator);
+        } else {
+         var promiseOffline = getJSONPromise("/channels/" + searchTerm);
+         promiseOffline.then(function(json){
+          searchOffline(json, searchTerm);
+         })
+        }
+      }
+    }).catch(function(error){
+     console.log(error);
     });
   }
 }
 
+function searchResultDecoration(generator) {
+  document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
+  document.getElementsByClassName("button-span")[0].style.display = "inline-block";
+  document.getElementsByClassName("close")[0].addEventListener("click", function(){
+  document.getElementsByClassName("search-result-div")[0].innerHTML = "";
+  document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
+});
+
+}
+
 function refresh () {
-  var whosStreams;
-  for (var i = 0; i < 3; i++){
-    if (document.getElementsByClassName("tab")[i].contains(document.getElementById("active"))){
-      whosStreams = document.getElementsByClassName("tab")[i].id;
-    }
-  }
-  if (whosStreams === "freecodecamp"){
     getArrayStreams('freecodecamp', fccStreams);
-  } else if (whosStreams === "brad"){
     getArrayStreams("brad", bradStreams);
-  } else {
     getTwitchStreams();
-  }
 }
 
 
 function getArrayStreams(recommendedBy, arr){
-  var offlineArr = [];
-  var generator;
   document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML = "";
   document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML = "";
   document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML = "";
   for (var i = 0; i < arr.length; i++){
-    getJSON("/streams/" + arr[i]);
-    if (json.stream !== null){
-      generator = htmlGenerator(false, false);
+    getJSON("/streams/" + arr[i], recommendedBy);
+  };
+}
+
+function streamerOnline(json, recommendedBy) {
+      var generator = htmlGenerator(json, false, false);
       document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += generator;
       document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML += generator;
-    } else {
-      offlineArr.push(arr[i]);
-    }
-  }
-  for (var j = 0; j < offlineArr.length; j++){
-    getJSON("channels/" + offlineArr[j]);
+      heights(recommendedBy);
+}
+
+function streamerOffline(json, recommendedBy){
     document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML += 
-    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + offlineArr[j] + '">' + offlineArr[j] + 
-    '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + offlineArr[j] + '"><img class = "logo" src="' + json.logo + '"></a></div>';
-    document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += 
-    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + offlineArr[j] + '">' + offlineArr[j] + 
-    '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + offlineArr[j] + '"><img class = "logo" src="' + json.logo + '"></a></div>';
-    }
+    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">'
+     + json.display_name + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' 
+     + json.logo + '"></a></div>';
+     document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += 
+    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">' + json.display_name + 
+    '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' + json.logo + '"></a></div>';
+    heights(recommendedBy);
+}
+
+function searchOffline(json, searchTerm){
+  generator = 
+      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "search-result-inner"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
+      + searchTerm + '">' + searchTerm + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/'
+       + searchTerm + '"><img class = "logo" src="' + json.logo + '"></a></div>';
+      document.getElementsByClassName("search-result-div")[0].style.padding = " 0 0 2vh 0";
+      searchResultDecoration(generator);
 }
 
 function getTwitchStreams() {
-  var generator;
-  document.getElementsByClassName("twitch-outer")[0].innerHTML = "";
-  getJSON("streams/featured");
-  for (var i = 0; i < json.featured.length; i++){
-        generator = htmlGenerator(true, false, i);
-        document.getElementsByClassName("twitch-outer")[0].innerHTML += generator;
-        }
+  var promise = getJSONPromise("/streams/featured");
+  promise.then(function(json){
+    var generator;
+    document.getElementsByClassName("twitch-outer")[0].innerHTML = "";
+    for (var i = 0; i < json.featured.length; i++){
+      generator = htmlGenerator(json, true, false, i);
+      document.getElementsByClassName("twitch-outer")[0].innerHTML += generator;
     }
+  })
+}
 
 function heights(recommendedBy) {
   var active = Number(removePercent(document.getElementsByClassName(recommendedBy + "-inner")[0].style.left));
@@ -272,18 +315,13 @@ function slide(direction, distance) {
 
 function fcc(button) {
   tabSwitch(button.target.offsetParent);
-  getArrayStreams('freecodecamp', fccStreams);
-  heights("freecodecamp");
 
 }
 
 function brad(button) {
   tabSwitch(button.target.offsetParent);
-  getArrayStreams("brad", bradStreams);
-  heights("brad");
 }
 
 function twitch(button) {
   tabSwitch(button.target.offsetParent);
-  getTwitchStreams();
 }
