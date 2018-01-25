@@ -23,11 +23,13 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 var left;
+var bradCounter = 0;
+var fccCounter = 0;
 var bradStreams = ["foggedftw2", "boxerpete", "neace", "imaqtpie", "loltyler1", "tobiasfate", "karnrs"];
 var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
  
 function tabSwitch(event) {
-  event = event.target.offsetParent;
+  event = event.target.parentElement;
   for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
     document.getElementsByClassName("featured")[i].id = "";
     document.getElementsByClassName("inner-tab-div")[i].id = "";
@@ -36,25 +38,8 @@ function tabSwitch(event) {
   document.getElementsByClassName(event.id + "-inner-tab-div")[0].id = "active";
   document.getElementsByClassName("big-tab")[0].classList.remove("big-tab");
   document.getElementById(event.id).classList.add("big-tab");
-  leftAdjust();
   heights("freecodecamp");
   heights("brad");
-}
-
-function leftAdjust() {
-  if (document.getElementById("freecodecamp").classList.contains("big-tab")) {
-    document.getElementById("freecodecamp").style.left = 0;
-    document.getElementById("twitch").style.left = 41 + "%";
-    document.getElementById("brad").style.left = 71 + "%";
-  } else if (document.getElementById("twitch").classList.contains("big-tab")){
-    document.getElementById("freecodecamp").style.left = 0;
-    document.getElementById("twitch").style.left = 30 + "%";
-    document.getElementById("brad").style.left = 71 + "%";
-  } else {
-    document.getElementById("freecodecamp").style.left = 0;
-    document.getElementById("twitch").style.left = 30 + "%";
-    document.getElementById("brad").style.left = 60 + "%";
-  }
 }
 
 function replaceStreamWithChannel(toBeReplaced){
@@ -93,24 +78,47 @@ function getJSONPromise(query, recommendedBy){
     })
   }
 
-function getJSON(query, recommendedBy) {
+function getJSON(query, recommendedBy, arr) {
   for (var j = 0; j < document.getElementsByClassName("alert").length; j++) {
         document.getElementsByClassName("alert")[j].innerHTML = "";
       }
-
-  var promise = getJSONPromise(query, recommendedBy);
+  var promise = getJSONPromise(query, recommendedBy, arr);
   promise.then(function(json){
     if (json.stream !== undefined){
       if (json.stream !== null){
-        streamerOnline(json, recommendedBy);
+         var who = streamerOnline(json, recommendedBy);
+         if (who === "freecodecamp"){
+          fccCounter++;
+         } else {
+          bradCounter++;
+         }
       } else {
         var offlineQuery = replaceStreamWithChannel(query);
-        getJSON(offlineQuery, recommendedBy);
-      }
+         getJSON(offlineQuery, recommendedBy, arr);
+       }
     } else {
-      streamerOffline(json, recommendedBy);
-  }
-}).catch(function(error){
+       who = streamerOffline(json, recommendedBy);
+        if (who === "freecodecamp"){
+          fccCounter++;
+         } else {
+          bradCounter++;
+         }
+    }
+  }).then(function(){
+    if (bradCounter === bradStreams.length){
+      bradCounter = 0;
+      document.getElementsByClassName("brad-online")[0].innerHTML += "<div class = 'placeholder'></div>";
+      document.getElementsByClassName("brad-all")[0].innerHTML += "<div class = 'placeholder'></div>";
+      document.getElementsByClassName("brad-offline")[0].innerHTML += "<div class = 'placeholder'></div>";
+    } 
+    if (fccCounter === fccStreams.length){
+      fccCounter = 0;
+      document.getElementsByClassName("freecodecamp-online")[0].innerHTML += "<div class = 'placeholder'></div>";
+      document.getElementsByClassName("freecodecamp-all")[0].innerHTML += "<div class = 'placeholder'></div>";
+      document.getElementsByClassName("freecodecamp-offline")[0].innerHTML += "<div class = 'placeholder'></div>";
+
+    }
+  }).catch(function(error){
     console.log(error);
   });
 
@@ -193,13 +201,17 @@ function refresh () {
     getTwitchStreams();
 }
 
+function streamerCounter(element) {
+  console.log(document.getElementsByClassName("brad-all")[0].childElementCount);
+}
+
 
 function getArrayStreams(recommendedBy, arr){
   document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML = "";
   document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML = "";
   document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML = "";
   for (var i = 0; i < arr.length; i++){
-    getJSON("/streams/" + arr[i], recommendedBy);
+    getJSON("/streams/" + arr[i], recommendedBy, arr);
   };
 }
 
@@ -208,6 +220,7 @@ function streamerOnline(json, recommendedBy) {
       document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += generator;
       document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML += generator;
       heights(recommendedBy);
+      return recommendedBy;
 }
 
 function streamerOffline(json, recommendedBy){
@@ -219,6 +232,7 @@ function streamerOffline(json, recommendedBy){
     '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">' + json.display_name + 
     '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' + json.logo + '"></a></div>';
     heights(recommendedBy);
+    return recommendedBy;
 }
 
 function searchOffline(json, searchTerm){
@@ -234,10 +248,15 @@ function getTwitchStreams() {
   var promise = getJSONPromise("/streams/featured");
   promise.then(function(json){
     var generator;
+    var counter = 0;
     document.getElementsByClassName("twitch-outer")[0].innerHTML = "";
     for (var i = 0; i < json.featured.length; i++){
       generator = htmlGenerator(json, true, false, i);
       document.getElementsByClassName("twitch-outer")[0].innerHTML += generator;
+      counter++;
+    }
+    if (counter === json.featured.length){
+      document.getElementsByClassName("twitch-outer")[0].innerHTML += "<div class = 'placeholder'></div>";
     }
   })
 }
@@ -253,8 +272,7 @@ function heights(recommendedBy) {
     document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height2 + "px";
   } else {
     document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height1 + "px";
-  }
-  
+  } 
 }
 
 function distanceAndDirectionForSlide(button) {

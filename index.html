@@ -10,7 +10,9 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<h1>Brad's</h1><img onclick = "debug()" class = "svg" src="twitch.svg"><h1>Tool</h1>
+		<div class = "title-div">
+		<h1>Brad's</h1><img onclick = "streamerCounter()" class = "svg" src="twitch.svg"><h1>Tool</h1>
+		</div>
 
 		<!--
 		STREAMER SEARCH
@@ -23,13 +25,12 @@
 		<div class = "search-result-div"><span class = "button-span"><button class = "close">&times;</button></span></div>
 		<button class = "refresh-streams"><i class = "fa fa-refresh" aria-hidden="true"></i>   Refresh Streams</button>
 
-		
-		<div class = "streams-div">
-			<div class = "tab-div">
-				<div class = "big-tab tab" id = "freecodecamp"><button><div class = "freecodecamp-inner-tab-div inner-tab-div" id = "active">FCC's Streams</div></button></div>
-				<div class = "tab" id = "twitch"><button><div class = "twitch-inner-tab-div inner-tab-div">Twitch Featured</div></button></div>
-				<div class = "tab" id = "brad"><button><div class = "brad-inner-tab-div inner-tab-div">Brad's Streams</div></button></div>
+		<div class = "tab-div">
+				<div class = "big-tab tab" id = "freecodecamp"><button><div class = "freecodecamp-inner-tab-div inner-tab-div" id = "active">FCC's Streams</div></button></div><!--
+				--><div class = "tab" id = "twitch"><button><div class = "twitch-inner-tab-div inner-tab-div">Twitch Featured</div></button></div><!--
+				--><div class = "tab" id = "brad"><button><div class = "brad-inner-tab-div inner-tab-div">Brad's Streams</div></button></div>
 		</div>
+		<div class = "streams-div">
 			<div class = "freecodecamp-featured featured" id = "show">
 				<h2>Freecodecamp's Recommended Streams</h2>
 				<div class = "freecodecamp-navbar navbar">
