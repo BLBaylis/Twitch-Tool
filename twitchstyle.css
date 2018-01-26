@@ -134,7 +134,7 @@ h4 {
 
 input {
 	height : 100%;
-	width : 75%;
+	width : calc(75% - 4px);
 	float : left;
 	padding: 0 0 0 3%;
 }
@@ -157,8 +157,8 @@ input {
 }
 
 .search-bar-btn {
-	width : calc(22% - 2px);
-	height : calc(100% + 1px);
+	width : 22%;
+	height : calc(100% + 4px);
 	float : left;
 	background-color : #6441a5;
 	color : #eee;
@@ -235,7 +235,12 @@ input {
 }
 
 .big-tab {
-	width  : calc(40% - 1px);
+	width  : calc(40% - 2px);
+	display : inline-block;
+	height : 100%;
+	border-top-left-radius : 25px;
+	border-top-right-radius: 25px;
+	border : none;	
 }
 
 #freecodecamp {
