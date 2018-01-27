@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     left += "%";
     document.getElementsByClassName("brad-inner")[j].style.left = left;
   }
-  document.getElementsByClassName("search-bar-btn")[0].addEventListener("click", streamerSearch);
+  //document.getElementsByClassName("search-bar-btn")[0].addEventListener("click", streamerSearch);
   document.getElementsByClassName("refresh-streams")[0].addEventListener("click", refresh);
   document.getElementById("freecodecamp").addEventListener("click", tabSwitch);
   document.getElementById("brad").addEventListener("click", tabSwitch);
@@ -29,7 +29,7 @@ var bradStreams = ["foggedftw2", "boxerpete", "neace", "imaqtpie", "loltyler1", 
 var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
  
 function tabSwitch(event) {
-  event = event.target
+  event = event.target.parentElement;
   for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
     document.getElementsByClassName("featured")[i].id = "";
     document.getElementsByClassName("inner-tab-div")[i].id = "";
@@ -107,15 +107,21 @@ function getJSON(query, recommendedBy, arr) {
   }).then(function(){
     if (bradCounter === bradStreams.length){
       bradCounter = 0;
-      document.getElementsByClassName("brad-online")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
-      document.getElementsByClassName("brad-all")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
-      document.getElementsByClassName("brad-offline")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("brad-online")[0].innerHTML
+       += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("brad-all")[0].innerHTML
+       += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("brad-offline")[0].innerHTML
+       += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
     } 
     if (fccCounter === fccStreams.length){
       fccCounter = 0;
-      document.getElementsByClassName("freecodecamp-online")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
-      document.getElementsByClassName("freecodecamp-all")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
-      document.getElementsByClassName("freecodecamp-offline")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("freecodecamp-online")[0].innerHTML
+       += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("freecodecamp-all")[0].innerHTML
+       += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("freecodecamp-offline")[0].innerHTML
+       += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
 
     }
   }).catch(function(error){
@@ -329,17 +335,4 @@ function slide(direction, distance) {
     } 
   heights("freecodecamp");
   heights("brad");
-}
-
-function fcc(button) {
-  tabSwitch(button.target.offsetParent);
-
-}
-
-function brad(button) {
-  tabSwitch(button.target.offsetParent);
-}
-
-function twitch(button) {
-  tabSwitch(button.target.offsetParent);
 }

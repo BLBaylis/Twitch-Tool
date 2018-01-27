@@ -134,13 +134,20 @@ h4 {
 
 input {
 	height : 100%;
-	width : calc(75% - 4px);
+	width : calc(100% - 42px);
 	float : left;
-	padding: 0 0 0 3%;
+	padding : 0 21px;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+	transition : box-shadow 300ms ease-in-out;
+	border : none;
+	font-size : 18px;
+}
+
+input:hover {
+	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
 }
 
 .title-div {
-	/*margin : 2vh auto;*/
 	margin : 0;
 }
 
@@ -150,20 +157,22 @@ input {
 
 .streamer-search{
 	width : 90%;
-	height : 30px;
+	height : 45px;
 	border : none;
 	background-color : #fff;
 	margin : 1vh auto 1vh;
 }
 
-.search-bar-btn {
-	width : 22%;
-	height : calc(100% + 4px);
+/*.search-bar-btn {
+	width : 25%;
+	height : 100%;
 	float : left;
 	background-color : #6441a5;
 	color : #eee;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
 	border  :none;
-}
+	padding : 0;
+}*/
 
 .search-bar-btn:hover{
 	background-color: #956dd7;
@@ -173,14 +182,17 @@ input {
 	margin : 1vh 0;
 	height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
 	width : 90%;
-	font-size : 25px;
+	font-size: calc(11px + (4 * (100vw - 350px) / 130));
 	background-color : #6441a5;
 	color : #eee;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+	transition : all 300ms ease-in-out;
+	border : none;
 }
 
 .refresh-streams:hover {
 	background-color : #956dd7;
-
+	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
 }
 
 .search-result-div {
@@ -211,49 +223,40 @@ input {
 	color : white;
 }
 
-.streams-div{
-	width : 90%;
-	margin : 0 auto 5%;	
-	color : #fff;
-}
-
 .tab-div {
-	border-bottom : none;
 	height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
 	width : 90%;
 	border:  none;
 	margin : 1vh auto 0;
+	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
 }
 
 .tab {
 	display : inline-block;
 	width : calc(30% - 2px);
 	height : 100%;
-	border-top-left-radius : 25px;
-	border-top-right-radius: 25px;
 	border : none;
+	transition : all 300ms ease-in-out;
 }
 
 .big-tab {
 	width  : calc(40% - 2px);
 	display : inline-block;
 	height : 100%;
-	border-top-left-radius : 25px;
-	border-top-right-radius: 25px;
 	border : none;	
 }
 
 #freecodecamp {
-	border-left : solid 1px #6441a5;
+	border-left : solid 2px #6441a5;
 	border-right : solid 1px white;
 }
 
-#twitch {
+#twitch{
 	border-left : solid 1px white;
 	border-right : solid 1px white;
 }
 
-#brad {
+#brad{
 	border-left : solid 1px white;
 	border-right : solid 1px #6441a5;
 }
@@ -262,12 +265,11 @@ input {
 	width : 100%;
 	height : 100%;
 	border  : none;
-	font-size: calc(9px + (6 * (100vw - 350px) / 130));
+	font-size: calc(11px + (4 * (100vw - 350px) / 130));
 	background-color : #6441a5;
 	color : #eee;
-	border-top-left-radius : 25px;
-	border-top-right-radius: 25px;
-	pointer-events: none;
+	padding : 0;
+	transition : all 300ms ease-in-out;
 }
 
 .tab-div button:hover {
@@ -280,12 +282,20 @@ input {
 	line-height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
 	height : 100%;
 	width : 100%;
-	pointer-events: none;
 }
 
 #active {
-	border-bottom : solid #fff;
-	width : 75%;
+	border-bottom : solid 3px #fff;
+	height : calc(100% - 3px);
+	width : 95%;
+}
+
+.streams-div{
+	width : 90%;
+	margin : 0 auto 5%;	
+	color : #fff;
+	border  :none;
+	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
 }
 
 .featured {
@@ -303,18 +313,16 @@ input {
 
 .navbar {
 	height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
-	width : calc(100% - 2px);
+	width : 100%;
 	background-color: #eee;
 	margin : 4vh 0 0 0;
-	border-left : solid 1px #6441a5;
-	border-right : solid 1px #6441a5;
 }
 
 .navbar-btn {
 	background-color : #eee;
 	color : black;
 	height : 100%;
-	width : 33.3333333%;
+	width : calc(100% / 3);
 	float : left;
 	border : none;
 	text-decoration : none;
@@ -417,6 +425,11 @@ a:hover {
 	h1 {
 		display : inline-block;
 		margin : 0 2.5%;
+		font-size : calc(35px + (35 * (100vw - 480px) / 1480));
+	}
+
+	h2 {
+		font-size : calc(26.25px + (53 * (100vw - 480px) / 1480));
 	}
 
 	.svg {	
@@ -427,9 +440,11 @@ a:hover {
 		margin : 2vh auto;
 	}
 
-	.tab-div button {
-		font-size : 15px;
+	.tab-div button, .refresh-streams {
+		font-size : calc(15px + (15 * (100vw - 480px) / 1540));
 	}
+
+	
 
 }
 
@@ -456,10 +471,6 @@ a:hover {
 }
 
 @media (min-height : 768px){
-
-	.streamer-search {
-		height : 30px;
-	}
 
 	.refresh-streams {
 		height : 6%;
