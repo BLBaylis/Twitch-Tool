@@ -107,15 +107,15 @@ function getJSON(query, recommendedBy, arr) {
   }).then(function(){
     if (bradCounter === bradStreams.length){
       bradCounter = 0;
-      document.getElementsByClassName("brad-online")[0].innerHTML += "<div class = 'placeholder'></div>";
-      document.getElementsByClassName("brad-all")[0].innerHTML += "<div class = 'placeholder'></div>";
-      document.getElementsByClassName("brad-offline")[0].innerHTML += "<div class = 'placeholder'></div>";
+      document.getElementsByClassName("brad-online")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("brad-all")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("brad-offline")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
     } 
     if (fccCounter === fccStreams.length){
       fccCounter = 0;
-      document.getElementsByClassName("freecodecamp-online")[0].innerHTML += "<div class = 'placeholder'></div>";
-      document.getElementsByClassName("freecodecamp-all")[0].innerHTML += "<div class = 'placeholder'></div>";
-      document.getElementsByClassName("freecodecamp-offline")[0].innerHTML += "<div class = 'placeholder'></div>";
+      document.getElementsByClassName("freecodecamp-online")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("freecodecamp-all")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("freecodecamp-offline")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
 
     }
   }).catch(function(error){

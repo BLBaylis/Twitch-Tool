@@ -381,8 +381,7 @@ input {
 	visibility : hidden;
   	text-align : center;
 	width : 45%;
-	margin : 0;
-	border  :solid;
+	margin : 3vh auto;
 }
 
 a {
@@ -440,6 +439,20 @@ a:hover {
 		width : 45%;
 	}
 
+}
+
+@media (min-width : 1000px){
+
+	.featured-streamer, .offline-streamer, .placeholder {
+		width : 30%;
+	}
+
+}
+
+@media (min-width : 1300px) {
+	.featured-streamer, .offline-streamer, .placeholder {
+		width : 22.5%;
+	}
 }
 
 @media (min-height : 768px){
