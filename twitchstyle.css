@@ -240,7 +240,7 @@ input:hover {
 }
 
 .big-tab {
-	width  : calc(40% - 2px);
+	width  : calc(40% - 3px);
 	display : inline-block;
 	height : 100%;
 	border : none;	
@@ -282,6 +282,7 @@ input:hover {
 	line-height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
 	height : 100%;
 	width : 100%;
+	pointer-events: none;
 }
 
 #active {

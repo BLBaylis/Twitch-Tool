@@ -29,7 +29,9 @@ var bradStreams = ["foggedftw2", "boxerpete", "neace", "imaqtpie", "loltyler1", 
 var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
  
 function tabSwitch(event) {
+  console.log(event);
   event = event.target.parentElement;
+  console.log(event);
   for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
     document.getElementsByClassName("featured")[i].id = "";
     document.getElementsByClassName("inner-tab-div")[i].id = "";
