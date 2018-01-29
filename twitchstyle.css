@@ -143,7 +143,7 @@ input {
 	font-size : 18px;
 }
 
-input:hover {
+input:hover, input:focus {
 	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
 }
 
@@ -163,18 +163,7 @@ input:hover {
 	margin : 1vh auto 1vh;
 }
 
-/*.search-bar-btn {
-	width : 25%;
-	height : 100%;
-	float : left;
-	background-color : #6441a5;
-	color : #eee;
-	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-	border  :none;
-	padding : 0;
-}*/
-
-.search-bar-btn:hover{
+.search-bar-btn:hover, .search-bar-btn:focus {
 	background-color: #956dd7;
 }
 
@@ -190,7 +179,7 @@ input:hover {
 	border : none;
 }
 
-.refresh-streams:hover {
+.refresh-streams:hover, .refresh-streams:focus {
 	background-color : #956dd7;
 	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
 }
@@ -214,13 +203,30 @@ input:hover {
 	color : white;
 }
 
-.close:hover {
+.close:hover, .close:focus {
 	color : black;
 }
 
-.search-result-inner {
-	margin : -5vh 0 0 0;
+.searched-streamer-offline {
+	margin : -3vh 0 0 0;
 	color : white;
+}
+
+.searched-streamer-online {
+	display: flex;
+	flex-flow : column wrap;
+	justify-content: flex-end;
+  	text-align : center;
+	width : 90%;
+	margin : 0 auto;
+}
+
+.streamer-not-found {
+  	text-align : center;
+	width : 90%;
+	margin : 0 auto;
+	margin-top : calc(-24px - (11 * (100vh - 300px) / 900));
+	color : #fff;
 }
 
 .tab-div {
@@ -233,32 +239,17 @@ input:hover {
 
 .tab {
 	display : inline-block;
-	width : calc(30% - 2px);
+	width : 30%;
 	height : 100%;
 	border : none;
 	transition : all 300ms ease-in-out;
 }
 
 .big-tab {
-	width  : calc(40% - 3px);
+	width  : 40%;
 	display : inline-block;
 	height : 100%;
 	border : none;	
-}
-
-#freecodecamp {
-	border-left : solid 2px #6441a5;
-	border-right : solid 1px white;
-}
-
-#twitch{
-	border-left : solid 1px white;
-	border-right : solid 1px white;
-}
-
-#brad{
-	border-left : solid 1px white;
-	border-right : solid 1px #6441a5;
 }
 
 .tab-div button {
@@ -272,7 +263,7 @@ input:hover {
 	transition : all 300ms ease-in-out;
 }
 
-.tab-div button:hover {
+.tab-div button:hover, .tab-div button:focus {
 	background-color: #956dd7;
 	color : #fff;
 }
@@ -308,31 +299,44 @@ input:hover {
 	border : none;
 }
 
-#show {
+.show {
 	display : block;
 }
 
 .navbar {
+	display : flex;
+	flex-flow : row nowrap;
+	justify-content : space-around;
 	height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
 	width : 100%;
-	background-color: #eee;
-	margin : 4vh 0 0 0;
+	background-color: #6441a5;
+	margin : 4vh auto 0;
 }
 
 .navbar-btn {
-	background-color : #eee;
-	color : black;
+	background-color : #6441a5;
+	color : #fff;
 	height : 100%;
-	width : calc(100% / 3);
-	float : left;
+	width : 30%;
 	border : none;
 	text-decoration : none;
 	line-height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
 	font-size : 25px;
+	cursor : pointer;
+	padding : 0 10px;
+	transition : all 300ms ease-in-out;
+
 }
 
-.navbar-btn:hover{
-	color : #6441a5;
+.navbar-btn:hover, .navbar-btn:focus {
+	color : #fff;
+	background-color : #956dd7;
+}
+
+.navbar-active {
+	color : #fff;
+	border-bottom : solid 3px #fff;
+	width : 40%;
 }
 
 .outer {
@@ -357,7 +361,12 @@ input:hover {
  	position : absolute;
  	width : 100%;
  	transition : left 300ms ease-in-out;
- 	padding : 0 0 3vh 0;
+ 	padding : 0 0 1vh 0;
+ 	visibility : hidden;
+}
+
+.show-inner {
+	visibility : visible;
 }
 
 .online {
@@ -390,7 +399,7 @@ input:hover {
 	visibility : hidden;
   	text-align : center;
 	width : 45%;
-	margin : 3vh auto;
+	margin : 0 auto;
 }
 
 a {
@@ -398,7 +407,7 @@ a {
 	color : #fff;
 }
 
-a:hover {
+a:hover, a:focus {
 	color : black;
 }
 
@@ -417,6 +426,7 @@ a:hover {
 	display : block;
 	margin : 1vh auto;
 	width : 30%;
+	max-width: 200px;
 }
 
 

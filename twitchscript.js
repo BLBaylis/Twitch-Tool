@@ -12,13 +12,14 @@ document.addEventListener("DOMContentLoaded", function() {
     left += "%";
     document.getElementsByClassName("brad-inner")[j].style.left = left;
   }
-  //document.getElementsByClassName("search-bar-btn")[0].addEventListener("click", streamerSearch);
+  document.getElementsByTagName("input")[0].addEventListener("keyup", callEventUsingReturnKey);
   document.getElementsByClassName("refresh-streams")[0].addEventListener("click", refresh);
   document.getElementById("freecodecamp").addEventListener("click", tabSwitch);
   document.getElementById("brad").addEventListener("click", tabSwitch);
   document.getElementById("twitch").addEventListener("click", tabSwitch);
   for (var j = 0; j < document.getElementsByClassName("navbar-btn").length; j++) {
     document.getElementsByClassName("navbar-btn")[j].addEventListener("click", distanceAndDirectionForSlide);
+    document.getElementsByClassName("navbar-btn")[j].addEventListener("keyup", callEventUsingReturnKey);
   }
 });
 
@@ -27,16 +28,23 @@ var bradCounter = 0;
 var fccCounter = 0;
 var bradStreams = ["foggedftw2", "boxerpete", "neace", "imaqtpie", "loltyler1", "tobiasfate", "karnrs"];
 var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+
+function callEventUsingReturnKey(event) {
+  console.log(event.target.classList.contains("navbar-btn"));
+  if (event.keyCode === 13 && event.target === document.getElementsByTagName("input")[0]){
+    streamerSearch();
+  } else if (event.keyCode === 13 && event.target.classList.contains("navbar-btn") === true){
+    distanceAndDirectionForSlide(event);
+  }
+}
  
 function tabSwitch(event) {
-  console.log(event);
   event = event.target.parentElement;
-  console.log(event);
   for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
-    document.getElementsByClassName("featured")[i].id = "";
+    document.getElementsByClassName("featured")[i].classList.remove("show");
     document.getElementsByClassName("inner-tab-div")[i].id = "";
   }
-  document.getElementsByClassName(event.id + "-featured")[0].id = "show";
+  document.getElementsByClassName(event.id + "-featured")[0].classList.add("show");
   document.getElementsByClassName(event.id + "-inner-tab-div")[0].id = "active";
   document.getElementsByClassName("big-tab")[0].classList.remove("big-tab");
   document.getElementById(event.id).classList.add("big-tab");
@@ -148,7 +156,7 @@ function htmlGenerator (json, isItTwitch, isItSearch, i) {
 
   } else if (isItSearch) {
       generator = 
-        '<span class = "button-span"><button class = "close">&times;</button></span><div class = "featured-streamer height-set featured-streamer-search"><a target = "_blank" href = "https://www.twitch.tv/'
+        '<span class = "button-span"><button class = "close">&times;</button></span><div class = "searched-streamer-online height-set"><a target = "_blank" href = "https://www.twitch.tv/'
          + json.stream.channel.display_name + '"><h3>'
          + json.stream.channel.status + '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.stream.channel.game) + '">'
@@ -197,10 +205,9 @@ function searchResultDecoration(generator) {
   document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
   document.getElementsByClassName("button-span")[0].style.display = "inline-block";
   document.getElementsByClassName("close")[0].addEventListener("click", function(){
-  document.getElementsByClassName("search-result-div")[0].innerHTML = "";
-  document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
-});
-
+    document.getElementsByClassName("search-result-div")[0].innerHTML = "";
+    document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
+  });
 }
 
 function refresh () {
@@ -208,11 +215,6 @@ function refresh () {
     getArrayStreams("brad", bradStreams);
     getTwitchStreams();
 }
-
-function streamerCounter(element) {
-  console.log(document.getElementsByClassName("brad-all")[0].childElementCount);
-}
-
 
 function getArrayStreams(recommendedBy, arr){
   document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML = "";
@@ -244,13 +246,19 @@ function streamerOffline(json, recommendedBy){
 }
 
 function searchOffline(json, searchTerm){
-  generator = 
-      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "search-result-inner"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
+  if (json.logo !== undefined && typeof json.logo === "string"){
+    generator = 
+      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "searched-streamer-offline"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
       + searchTerm + '">' + searchTerm + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/'
        + searchTerm + '"><img class = "logo" src="' + json.logo + '"></a></div>';
       document.getElementsByClassName("search-result-div")[0].style.padding = " 0 0 2vh 0";
       searchResultDecoration(generator);
-}
+    } else if (json.logo === undefined){
+      generator =
+       '<span class = "button-span"><button class = "close">&times;</button></span><div class = "streamer-not-found"><h3>Sorry, this streamer couldn\'t be found!</h3></div>';
+       searchResultDecoration(generator);
+    }
+  }
 
 function getTwitchStreams() {
   var promise = getJSONPromise("/streams/featured");
@@ -283,12 +291,12 @@ function heights(recommendedBy) {
   } 
 }
 
-function distanceAndDirectionForSlide(button) {
+function distanceAndDirectionForSlide(event) {
   var currLocation, destination, distance, direction;
   var arr = ["online", "all", "offline"];
-  if (button.target.classList.contains("btn-online")){
+  if (event.target.classList.contains("btn-online")){
     destination = "online";
-  } else if (button.target.classList.contains("btn-offline")){
+  } else if (event.target.classList.contains("btn-offline")){
     destination = "offline";
   } else {
     destination = "all";
@@ -303,6 +311,10 @@ function distanceAndDirectionForSlide(button) {
   distance = Math.abs(distance);
   slide(direction, distance);
   document.getElementById("on-off-all").id = "";
+  for (var i = 0; i < 2; i++){
+    document.getElementsByClassName("navbar-active")[i].classList.remove("navbar-active");
+    document.getElementsByClassName("btn-" + destination)[i].classList.add("navbar-active");
+  }
   document.getElementsByClassName(destination)[0].id = "on-off-all";
 }
 
@@ -334,7 +346,14 @@ function slide(direction, distance) {
     fccResult = fccResult + "%";
     document.getElementsByClassName("freecodecamp-inner")[i].style.left = fccResult;
     document.getElementsByClassName("brad-inner")[i].style.left = bradResult;  
-    } 
+    }
+    for (var i = 0; i < document.getElementsByClassName("inner").length; i++){
+      if (document.getElementsByClassName("inner")[i].style.left === "0%"){
+        document.getElementsByClassName("inner")[i].classList.add("show-inner");
+      } else {
+        document.getElementsByClassName("inner")[i].classList.remove("show-inner");
+      }
+    }
   heights("freecodecamp");
   heights("brad");
 }

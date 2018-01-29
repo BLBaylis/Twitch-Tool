@@ -21,7 +21,6 @@
 
 		<div class="streamer-search">
 			<input class = "search-bar" type="text" placeholder="Search">
-			<!--<button class = "search-bar-btn" type="submit">Search</button>-->
 		</div>
 		<div class = "search-result-div"><span class = "button-span"><button class = "close">&times;</button></span></div>
 		<button class = "refresh-streams"><i class = "fa fa-refresh" aria-hidden="true"></i>   Refresh Streams</button>
@@ -32,18 +31,18 @@
 				--><div class = "tab" id = "brad"><button><div class = "brad-inner-tab-div inner-tab-div">Brad's Streams</div></button></div>
 		</div>
 		<div class = "streams-div">
-			<div class = "freecodecamp-featured featured" id = "show">
+			<div class = "freecodecamp-featured featured show">
 				<h2>Freecodecamp's Recommended Streams</h2>
 				<div class = "freecodecamp-navbar navbar">
-					<a class = "navbar-btn btn-online">Online</a>
-					<a class = "navbar-btn btn-all">All</a>
-					<a class = "navbar-btn btn-offline">Offline</a>
+					<a tabindex = "0" class = "navbar-btn btn-online">Online</a>
+					<a tabindex = "0" class = "navbar-btn btn-all navbar-active">All</a>
+					<a tabindex = "0" class = "navbar-btn btn-offline">Offline</a>
 				</div>
 				<div class = "alert"></div>
 				<div class = "freecodecamp-outer outer"> 
   					<div class = "freecodecamp-inner inner freecodecamp-online online">
   					</div>
-  					<div class = "freecodecamp-inner inner freecodecamp-all all" id = "on-off-all">
+  					<div class = "freecodecamp-inner inner freecodecamp-all all show-inner" id = "on-off-all">
   					</div>
   					<div class = "freecodecamp-inner inner freecodecamp-offline offline">
   					</div>
@@ -57,15 +56,15 @@
   			<div class = "brad-featured featured">
 				<h2>Brad's Recommended Streams</h2>
 				<div class = "brad-navbar navbar">
-					<a class = "navbar-btn btn-online">Online</a>
-					<a class = "navbar-btn btn-all">All</a>
-					<a class = "navbar-btn btn-offline">Offline</a>					
+					<a tabindex = "0" class = "navbar-btn btn-online">Online</a>
+					<a tabindex = "0" class = "navbar-btn btn-all navbar-active">All</a>
+					<a tabindex = "0" class = "navbar-btn btn-offline">Offline</a>					
 				</div>
 				<div class = "alert"></div>
 				<div class = "brad-outer outer"> 
   					<div class = "brad-inner inner brad-online online">
   					</div>
-  					<div class = "brad-inner inner brad-all all">
+  					<div class = "brad-inner inner brad-all all show-inner">
   					</div>
   					<div class = "brad-inner inner brad-offline offline">
   					</div>
