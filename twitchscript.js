@@ -21,6 +21,10 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementsByClassName("navbar-btn")[j].addEventListener("click", distanceAndDirectionForSlide);
     document.getElementsByClassName("navbar-btn")[j].addEventListener("keyup", callEventUsingReturnKey);
   }
+  window.addEventListener('resize', function(){
+    heights("brad");
+    heights("freecodecamp");
+});
 });
 
 var left;
@@ -30,7 +34,6 @@ var bradStreams = ["foggedftw2", "boxerpete", "neace", "imaqtpie", "loltyler1", 
 var fccStreams = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
 
 function callEventUsingReturnKey(event) {
-  console.log(event.target.classList.contains("navbar-btn"));
   if (event.keyCode === 13 && event.target === document.getElementsByTagName("input")[0]){
     streamerSearch();
   } else if (event.keyCode === 13 && event.target.classList.contains("navbar-btn") === true){
@@ -272,7 +275,7 @@ function getTwitchStreams() {
       counter++;
     }
     if (counter === json.featured.length){
-      document.getElementsByClassName("twitch-outer")[0].innerHTML += "<div class = 'placeholder'></div>";
+      document.getElementsByClassName("twitch-outer")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
     }
   })
 }
@@ -288,7 +291,7 @@ function heights(recommendedBy) {
     document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height2 + "px";
   } else {
     document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height1 + "px";
-  } 
+  }
 }
 
 function distanceAndDirectionForSlide(event) {

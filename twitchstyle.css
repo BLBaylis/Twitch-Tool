@@ -359,6 +359,7 @@ input:hover, input:focus {
 	justify-content : flex-start;
 	align-content : flex-start;
  	position : absolute;
+ 	left : 0;
  	width : 100%;
  	transition : left 300ms ease-in-out;
  	padding : 0 0 1vh 0;
@@ -425,8 +426,8 @@ a:hover, a:focus {
 .logo {
 	display : block;
 	margin : 1vh auto;
-	width : 30%;
-	max-width: 200px;
+	height : 110px;
+	width: 110px;
 }
 
 
