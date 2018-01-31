@@ -26,13 +26,15 @@
 		<button class = "refresh-streams"><i class = "fa fa-refresh" aria-hidden="true"></i>   Refresh Streams</button>
 
 		<div class = "tab-div">
-				<div class = "big-tab tab" id = "freecodecamp"><button><div class = "freecodecamp-inner-tab-div inner-tab-div" id = "active">FCC's Streams</div></button></div><!--
+				<div class = "big-tab tab" id = "freecodecamp"><button><div class = "freecodecamp-inner-tab-div inner-tab-div tab-active">FCC's Streams</div></button></div><!--
 				--><div class = "tab" id = "twitch"><button><div class = "twitch-inner-tab-div inner-tab-div">Twitch Featured</div></button></div><!--
 				--><div class = "tab" id = "brad"><button><div class = "brad-inner-tab-div inner-tab-div">Brad's Streams</div></button></div>
 		</div>
 		<div class = "streams-div">
 			<div class = "freecodecamp-featured featured show">
-				<h2>Freecodecamp's Recommended Streams</h2>
+				<div class = "sub-heading-div">
+					<h2>Freecodecamp's Recommended Streams</h2>
+				</div>
 				<div class = "freecodecamp-navbar navbar">
 					<a tabindex = "0" class = "navbar-btn btn-online">Online</a>
 					<a tabindex = "0" class = "navbar-btn btn-all navbar-active">All</a>
@@ -49,12 +51,16 @@
   				</div>
   			</div>
   			<div class = "twitch-featured featured">
-				<h2>Featured by Twitch.Tv</h2>
+  				<div class = "sub-heading-div">
+					<h2>Featured by Twitch.Tv</h2>
+				</div>
 				<div class = "alert"></div>
 				<div class = "twitch-outer outer"></div>
 			</div>
   			<div class = "brad-featured featured">
-				<h2>Brad's Recommended Streams</h2>
+  				<div class = "sub-heading-div">
+					<h2>Brad's Recommended Streams</h2>
+				</div>
 				<div class = "brad-navbar navbar">
 					<a tabindex = "0" class = "navbar-btn btn-online">Online</a>
 					<a tabindex = "0" class = "navbar-btn btn-all navbar-active">All</a>

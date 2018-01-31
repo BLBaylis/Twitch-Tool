@@ -45,10 +45,10 @@ function tabSwitch(event) {
   event = event.target.parentElement;
   for (var i = 0; i < document.getElementsByClassName("featured").length; i++){
     document.getElementsByClassName("featured")[i].classList.remove("show");
-    document.getElementsByClassName("inner-tab-div")[i].id = "";
+    document.getElementsByClassName("inner-tab-div")[i].classList.remove("tab-active");
   }
   document.getElementsByClassName(event.id + "-featured")[0].classList.add("show");
-  document.getElementsByClassName(event.id + "-inner-tab-div")[0].id = "active";
+  document.getElementsByClassName(event.id + "-inner-tab-div")[0].classList.add("tab-active");
   document.getElementsByClassName("big-tab")[0].classList.remove("big-tab");
   document.getElementById(event.id).classList.add("big-tab");
   heights("freecodecamp");
@@ -146,7 +146,7 @@ function getJSON(query, recommendedBy, arr) {
 function htmlGenerator (json, isItTwitch, isItSearch, i) {
   if (isItTwitch) {
     var generator = '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + 
-        json.featured[i].stream.channel.display_name + '"><h3>'
+        json.featured[i].stream.channel.display_name + '"><h3 class = "status">'
          + json.featured[i].stream.channel.status + 
          '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.featured[i].stream.channel.game) + '">'
@@ -169,7 +169,7 @@ function htmlGenerator (json, isItTwitch, isItSearch, i) {
               + json.stream.channel.display_name + '</a></h4></div>';
   } else {
     generator = 
-        '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3>'
+        '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3 class = status>'
          + json.stream.channel.status + '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.stream.channel.game) + '">'
           + json.stream.channel.game + '</h4></a><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + 
