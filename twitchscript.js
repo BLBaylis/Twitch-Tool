@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+  //INITIAL STREAM FETCHING
   getArrayStreams("freecodecamp", fccStreams);
   getArrayStreams("brad", bradStreams);
   getTwitchStreams();
+  //ESTABLISHING LEFT VALUES FOR SLIDE()
   for (var i = 0; i < 3 ; i++){
     left = (i-1) * 100;
     left += "%";
@@ -12,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
     left += "%";
     document.getElementsByClassName("brad-inner")[j].style.left = left;
   }
+  //EVENT LISTENERS
   document.getElementsByTagName("input")[0].addEventListener("keyup", callEventUsingReturnKey);
   document.getElementsByClassName("refresh-streams")[0].addEventListener("click", refresh);
   document.getElementById("freecodecamp").addEventListener("click", tabSwitch);
@@ -24,8 +28,10 @@ document.addEventListener("DOMContentLoaded", function() {
   window.addEventListener('resize', function(){
     heights("brad");
     heights("freecodecamp");
+  });
 });
-});
+
+//GLOBAL VARIABLES
 
 var left;
 var bradCounter = 0;
@@ -51,14 +57,37 @@ function tabSwitch(event) {
   document.getElementsByClassName(event.id + "-inner-tab-div")[0].classList.add("tab-active");
   document.getElementsByClassName("big-tab")[0].classList.remove("big-tab");
   document.getElementById(event.id).classList.add("big-tab");
-  heights("freecodecamp");
-  heights("brad");
+  if (event.id === "freecodecamp"){
+    console.log(event.id, "event.id is fcc");
+    heights("brad");
+    heights("freecodecamp");
+  } else {
+    console.log("event.id is not fcc");
+    heights("freecodecamp"); 
+    heights("brad");
+   
+  }
 }
 
-function replaceStreamWithChannel(toBeReplaced){
-  var replaced = toBeReplaced.replace("streams", "channels");
-  return replaced;
+function heights(recommendedBy) {
+  var active = Number(removePercent(document.getElementsByClassName(recommendedBy + "-inner")[0].style.left));
+  var height1 = document.getElementsByClassName(recommendedBy + "-online")[0].offsetHeight;
+  var height2 = document.getElementsByClassName(recommendedBy + "-all")[0].offsetHeight;
+  var height3 = document.getElementsByClassName(recommendedBy + "-offline")[0].offsetHeight;
+  if (active === -200){
+    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height3 + "px";
+  } else if (active === -100){
+    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height2 + "px";
+  } else {
+    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height1 + "px";
+  }
+  console.log(recommendedBy + "'s streams-div-wrapper height should be the maximum height out of " + height1 + ", " + height2 + ", " 
+    + height3 + ".  Which is: " + Math.max(height1, height2, height3));
+  document.getElementsByClassName("streams-div-wrapper")[0].style.height = Math.max(height1, height2, height3) + "px";
+  console.log("height is " + document.getElementsByClassName("streams-div-wrapper")[0].style.height);
 }
+
+//FUNCTIONS FOR RETRIVNG ARRAY STREAMS
 
 function getJSONPromise(query, recommendedBy){
     return new Promise(function(resolve, reject){
@@ -91,7 +120,32 @@ function getJSONPromise(query, recommendedBy){
     })
   }
 
-function getJSON(query, recommendedBy, arr) {
+function featuredStreamerOnline(json, recommendedBy) {
+      var generator = htmlGenerator(json, false, false);
+      document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += generator;
+      document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML += generator;
+      heights(recommendedBy);
+      return recommendedBy;
+}
+
+function featuredStreamerOffline(json, recommendedBy){
+    document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML += 
+    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">'
+     + json.display_name + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' 
+     + json.logo + '"></a></div>';
+     document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += 
+    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">' + json.display_name + 
+    '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' + json.logo + '"></a></div>';
+    heights(recommendedBy);
+    return recommendedBy;
+}
+
+function replaceStreamWithChannel(toBeReplaced){
+  var replaced = toBeReplaced.replace("streams", "channels");
+  return replaced;
+}
+
+function getArrayStreamsJSON(query, recommendedBy, arr) {
   for (var j = 0; j < document.getElementsByClassName("alert").length; j++) {
         document.getElementsByClassName("alert")[j].innerHTML = "";
       }
@@ -99,7 +153,7 @@ function getJSON(query, recommendedBy, arr) {
   promise.then(function(json){
     if (json.stream !== undefined){
       if (json.stream !== null){
-         var who = streamerOnline(json, recommendedBy);
+         var who = featuredStreamerOnline(json, recommendedBy);
          if (who === "freecodecamp"){
           fccCounter++;
          } else {
@@ -107,10 +161,10 @@ function getJSON(query, recommendedBy, arr) {
          }
       } else {
         var offlineQuery = replaceStreamWithChannel(query);
-         getJSON(offlineQuery, recommendedBy, arr);
+         getArrayStreamsJSON(offlineQuery, recommendedBy, arr);
        }
     } else {
-       who = streamerOffline(json, recommendedBy);
+       who = featuredStreamerOffline(json, recommendedBy);
         if (who === "freecodecamp"){
           fccCounter++;
          } else {
@@ -140,7 +194,15 @@ function getJSON(query, recommendedBy, arr) {
   }).catch(function(error){
     console.log(error);
   });
+}
 
+function getArrayStreams(recommendedBy, arr){
+  document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML = "";
+  document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML = "";
+  document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML = "";
+  for (var i = 0; i < arr.length; i++){
+    getArrayStreamsJSON("/streams/" + arr[i], recommendedBy, arr);
+  };
 }
 
 function htmlGenerator (json, isItTwitch, isItSearch, i) {
@@ -155,7 +217,6 @@ function htmlGenerator (json, isItTwitch, isItSearch, i) {
           '"><img src = "' + json.featured[i].stream.preview.medium + '" class = "img"></img></a><br><h4>' + json.featured[i].stream.viewers +
               ' viewers on <a target = "_blank" href = "https://www.twitch.tv/' + json.featured[i].stream.channel.display_name + '">' 
               + json.featured[i].stream.channel.display_name + '</a></h4></div>';
-
 
   } else if (isItSearch) {
       generator = 
@@ -181,87 +242,7 @@ function htmlGenerator (json, isItTwitch, isItSearch, i) {
   return generator;
 }
 
-function streamerSearch() {
-  var generator;
-  var searchTerm = document.getElementsByClassName("search-bar")[0].value;
-  if (searchTerm !== ""){
-    var promise = getJSONPromise("/streams/" + searchTerm);
-    promise.then(function(json){
-      if (json.stream !== undefined){
-        if (json.stream !== null){
-          generator = htmlGenerator(json, false, true);
-          searchResultDecoration(generator);
-        } else {
-         var promiseOffline = getJSONPromise("/channels/" + searchTerm);
-         promiseOffline.then(function(json){
-          searchOffline(json, searchTerm);
-         })
-        }
-      }
-    }).catch(function(error){
-     console.log(error);
-    });
-  }
-}
-
-function searchResultDecoration(generator) {
-  document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
-  document.getElementsByClassName("button-span")[0].style.display = "inline-block";
-  document.getElementsByClassName("close")[0].addEventListener("click", function(){
-    document.getElementsByClassName("search-result-div")[0].innerHTML = "";
-    document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
-  });
-}
-
-function refresh () {
-    getArrayStreams('freecodecamp', fccStreams);
-    getArrayStreams("brad", bradStreams);
-    getTwitchStreams();
-}
-
-function getArrayStreams(recommendedBy, arr){
-  document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML = "";
-  document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML = "";
-  document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML = "";
-  for (var i = 0; i < arr.length; i++){
-    getJSON("/streams/" + arr[i], recommendedBy, arr);
-  };
-}
-
-function streamerOnline(json, recommendedBy) {
-      var generator = htmlGenerator(json, false, false);
-      document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += generator;
-      document.getElementsByClassName(recommendedBy + "-online")[0].innerHTML += generator;
-      heights(recommendedBy);
-      return recommendedBy;
-}
-
-function streamerOffline(json, recommendedBy){
-    document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML += 
-    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">'
-     + json.display_name + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' 
-     + json.logo + '"></a></div>';
-     document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += 
-    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">' + json.display_name + 
-    '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' + json.logo + '"></a></div>';
-    heights(recommendedBy);
-    return recommendedBy;
-}
-
-function searchOffline(json, searchTerm){
-  if (json.logo !== undefined && typeof json.logo === "string"){
-    generator = 
-      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "searched-streamer-offline"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
-      + searchTerm + '">' + searchTerm + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/'
-       + searchTerm + '"><img class = "logo" src="' + json.logo + '"></a></div>';
-      document.getElementsByClassName("search-result-div")[0].style.padding = " 0 0 2vh 0";
-      searchResultDecoration(generator);
-    } else if (json.logo === undefined){
-      generator =
-       '<span class = "button-span"><button class = "close">&times;</button></span><div class = "streamer-not-found"><h3>Sorry, this streamer couldn\'t be found!</h3></div>';
-       searchResultDecoration(generator);
-    }
-  }
+//FUNCTIONS FOR RETRIEVING NON-ARRAY STREAMS
 
 function getTwitchStreams() {
   var promise = getJSONPromise("/streams/featured");
@@ -280,19 +261,60 @@ function getTwitchStreams() {
   })
 }
 
-function heights(recommendedBy) {
-  var active = Number(removePercent(document.getElementsByClassName(recommendedBy + "-inner")[0].style.left));
-  var height1 = document.getElementsByClassName(recommendedBy + "-online")[0].offsetHeight;
-  var height2 = document.getElementsByClassName(recommendedBy + "-all")[0].offsetHeight;
-  var height3 = document.getElementsByClassName(recommendedBy + "-offline")[0].offsetHeight;
-  if (active === -200){
-    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height3 + "px";
-  } else if (active === -100){
-    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height2 + "px";
-  } else {
-    document.getElementsByClassName(recommendedBy + "-outer")[0].style.height = height1 + "px";
+function streamerSearch() {
+  var generator;
+  var searchTerm = document.getElementsByClassName("search-bar")[0].value;
+  if (searchTerm !== ""){
+    var promise = getJSONPromise("/streams/" + searchTerm);
+    promise.then(function(json){
+      if (json.stream !== undefined){
+        if (json.stream !== null){
+          generator = htmlGenerator(json, false, true);
+          searchResultDecoration(generator);
+        } else {
+         var promiseOffline = getJSONPromise("/channels/" + searchTerm);
+         promiseOffline.then(function(json){
+          searchStreamerOffline(json, searchTerm);
+         })
+        }
+      }
+    }).catch(function(error){
+     console.log(error);
+    });
   }
 }
+
+function searchResultDecoration(generator) {
+  document.getElementsByClassName("search-result-div")[0].innerHTML = generator;
+  document.getElementsByClassName("button-span")[0].style.display = "inline-block";
+  document.getElementsByClassName("close")[0].addEventListener("click", function(){
+    document.getElementsByClassName("search-result-div")[0].innerHTML = "";
+    document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
+  });
+}
+
+function searchStreamerOffline(json, searchTerm){
+  if (json.logo !== undefined && typeof json.logo === "string"){
+    generator = 
+      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "searched-streamer-offline"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
+      + searchTerm + '">' + searchTerm + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/'
+       + searchTerm + '"><img class = "logo" src="' + json.logo + '"></a></div>';
+      document.getElementsByClassName("search-result-div")[0].style.padding = " 0 0 2vh 0";
+      searchResultDecoration(generator);
+    } else if (json.logo === undefined){
+      generator =
+       '<span class = "button-span"><button class = "close">&times;</button></span><div class = "streamer-not-found"><h3>Sorry, this streamer couldn\'t be found!</h3></div>';
+       searchResultDecoration(generator);
+    }
+  }
+
+function refresh() {
+    getArrayStreams('freecodecamp', fccStreams);
+    getArrayStreams("brad", bradStreams);
+    getTwitchStreams();
+}
+
+//FUNCTIONS FOR MOVING BETWEEN ONLINE/OFFLINE/ALL
 
 function distanceAndDirectionForSlide(event) {
   var currLocation, destination, distance, direction;

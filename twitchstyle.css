@@ -147,6 +147,8 @@ input:hover, input:focus {
 	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
 }
 
+/*TITLE START*/
+
 .title-div {
 	margin : 0;
 }
@@ -154,6 +156,10 @@ input:hover, input:focus {
 .svg {
 	width : 30%;
 }
+
+/*TITLE END*/
+
+/*SEARCH FUNCTION START*/
 
 .streamer-search{
 	width : 90%;
@@ -165,23 +171,6 @@ input:hover, input:focus {
 
 .search-bar-btn:hover, .search-bar-btn:focus {
 	background-color: #956dd7;
-}
-
-.refresh-streams {
-	margin : 1vh 0;
-	height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
-	width : 90%;
-	font-size: calc(11px + (4 * (100vw - 350px) / 130));
-	background-color : #6441a5;
-	color : #eee;
-	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-	transition : all 300ms ease-in-out;
-	border : none;
-}
-
-.refresh-streams:hover, .refresh-streams:focus {
-	background-color : #956dd7;
-	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
 }
 
 .search-result-div {
@@ -201,6 +190,7 @@ input:hover, input:focus {
 	border : none;
 	background-color : #6441a5;
 	color : white;
+	cursor : pointer;
 }
 
 .close:hover, .close:focus {
@@ -209,7 +199,7 @@ input:hover, input:focus {
 
 .searched-streamer-offline {
 	margin : -3vh 0 0 0;
-	color : white;
+	color : #fff;
 }
 
 .searched-streamer-online {
@@ -219,6 +209,16 @@ input:hover, input:focus {
   	text-align : center;
 	width : 90%;
 	margin : 0 auto;
+	color : #fff;
+}
+
+.search-result-div a{
+	color : #fff;
+	text-decoration: none;
+}
+
+.search-result-div a:hover{
+	color : black;
 }
 
 .streamer-not-found {
@@ -228,6 +228,31 @@ input:hover, input:focus {
 	margin-top : calc(-24px - (11 * (100vh - 300px) / 900));
 	color : #fff;
 }
+
+/*SEARCH FUNCTION END*/
+
+/*REFRESH BUTTON START*/
+
+.refresh-streams {
+	margin : 1vh 0;
+	height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
+	width : 90%;
+	font-size: calc(11px + (4 * (100vw - 350px) / 130));
+	background-color : #6441a5;
+	color : #eee;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+	transition : all 300ms ease-in-out;
+	border : none;
+}
+
+.refresh-streams:hover, .refresh-streams:focus {
+	background-color : #956dd7;
+	box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+/*REFRESH BUTTON END*/
+
+/*TABS START*/
 
 .tab-div {
 	height : calc(34.3px + (8.6 * (100vh - 300px) / 468));
@@ -280,11 +305,14 @@ input:hover, input:focus {
 }
 
 .tab-active {
-	/*border-bottom : solid 3px #fff;*/
 	height : 100%;
 	width : 100%;
 	background-color : #956dd7
 }
+
+/*TABS END*/
+
+/*STREAMS START*/
 
 .streams-div{
 	width : 90%;
@@ -311,6 +339,8 @@ input:hover, input:focus {
 .show {
 	display : block;
 }
+
+/*NAVBAR START*/
 
 .navbar {
 	display : flex;
@@ -351,17 +381,18 @@ input:hover, input:focus {
 
 .navbar-active {
 	color : black;
-	/*border-bottom : solid 3px #fff;*/
 	background-color : #fff;
 	width : 40%;
 }
+
+/*NAVBAR END*/
 
 .outer {
   	position : relative;
   	width : 100%;
   	margin : 0 auto;
  	overflow : hidden;
- 	transition : height 300ms ease-in-out;
+ 	transition: height 300ms linear;
 }
 
 .twitch-outer {
@@ -410,7 +441,7 @@ input:hover, input:focus {
 }
 
 .featured-streamer:hover, .offline-streamer:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 .featured-streamer{
@@ -429,14 +460,12 @@ input:hover, input:focus {
 	margin : 0 auto;	
 }
 
-a {
+.streams-div a {
 	text-decoration: none;
-	/*color : #fff;*/
 	color : black;
 }
 
-a:hover, a:focus {
-	/*color : black;*/
+.streams-div a:hover, .streams-div a:focus {
 	color : #6441a5;
 }
 
@@ -445,6 +474,7 @@ a:hover, a:focus {
 	max-width : 320px;
 	height : 180px;
 	margin : 0 auto;
+	border : solid 2px black;
 }
 
 .status {
@@ -459,7 +489,7 @@ a:hover, a:focus {
 	border : black 2px solid;
 }
 
-
+/*STREAMS END*/
 
 @media (min-width : 480px){
 
