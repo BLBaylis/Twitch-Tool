@@ -130,12 +130,12 @@ function featuredStreamerOnline(json, recommendedBy) {
 
 function featuredStreamerOffline(json, recommendedBy){
     document.getElementsByClassName(recommendedBy + "-offline")[0].innerHTML += 
-    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">'
-     + json.display_name + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' 
+    '<div class = "offline-streamer"><div class = "status"><h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">'
+     + json.display_name + '</a> is offline!</h3></div><a class = "logo-anchor" target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' 
      + json.logo + '"></a></div>';
      document.getElementsByClassName(recommendedBy + "-all")[0].innerHTML += 
-    '<div class = "offline-streamer"><h3 class = "status"><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">' + json.display_name + 
-    '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' + json.logo + '"></a></div>';
+    '<div class = "offline-streamer"><div class = "status"><h3><a target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '">' + json.display_name + 
+    '</a> is offline!</h3></div><a class = "logo-anchor" target = "_blank" href = "https://www.twitch.tv/' + json.display_name + '"><img class = "logo" src="' + json.logo + '"></a></div>';
     heights(recommendedBy);
     return recommendedBy;
 }
@@ -207,34 +207,34 @@ function getArrayStreams(recommendedBy, arr){
 
 function htmlGenerator (json, isItTwitch, isItSearch, i) {
   if (isItTwitch) {
-    var generator = '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + 
-        json.featured[i].stream.channel.display_name + '"><h3 class = "status">'
+    var generator = '<div class = "featured-streamer"><a class = "status" target = "_blank" href = "https://www.twitch.tv/' + 
+        json.featured[i].stream.channel.display_name + '"><h3>'
          + json.featured[i].stream.channel.status + 
          '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.featured[i].stream.channel.game) + '">'
-          + json.featured[i].stream.channel.game + '</h4></a><a target = "_blank" href = "https://www.twitch.tv/' 
+          + json.featured[i].stream.channel.game + '</h4></a><a class = "img-anchor" target = "_blank" href = "https://www.twitch.tv/' 
           + json.featured[i].stream.channel.display_name + 
-          '"><img src = "' + json.featured[i].stream.preview.medium + '" class = "img"></img></a><br><h4>' + json.featured[i].stream.viewers +
+          '"><img class = "img" src = "' + json.featured[i].stream.preview.medium + '"></img></a><br><h4>' + json.featured[i].stream.viewers +
               ' viewers on <a target = "_blank" href = "https://www.twitch.tv/' + json.featured[i].stream.channel.display_name + '">' 
               + json.featured[i].stream.channel.display_name + '</a></h4></div>';
 
   } else if (isItSearch) {
       generator = 
-        '<span class = "button-span"><button class = "close">&times;</button></span><div class = "searched-streamer-online height-set"><a target = "_blank" href = "https://www.twitch.tv/'
+        '<span class = "button-span"><button class = "close">&times;</button></span><div class = "searched-streamer-online"><a class = "status" target = "_blank" href = "https://www.twitch.tv/'
          + json.stream.channel.display_name + '"><h3>'
          + json.stream.channel.status + '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.stream.channel.game) + '">'
-          + json.stream.channel.game + '</h4></a><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + 
-          '"><img src = "' + json.stream.preview.medium + '" class = "img"></img></a><h4>' + json.stream.viewers +
+          + json.stream.channel.game + '</h4></a><a class = "img-anchor" target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + 
+          '"><img class = "img" src = "' + json.stream.preview.medium + '"></img></a><h4>' + json.stream.viewers +
               ' viewers on <a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '">' 
               + json.stream.channel.display_name + '</a></h4></div>';
   } else {
     generator = 
-        '<div class = "featured-streamer"><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3 class = status>'
+        '<div class = "featured-streamer"><a class = "status" target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '"><h3>'
          + json.stream.channel.status + '</h3></a><h4>Currently playing : <a target = "_blank" href = "https://www.twitch.tv/directory/game/' + 
          encodeURIComponent(json.stream.channel.game) + '">'
-          + json.stream.channel.game + '</h4></a><a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + 
-          '"><img src = "' + json.stream.preview.medium + '" class = "img"></img></a><h4>' + json.stream.viewers +
+          + json.stream.channel.game + '</h4></a><a class = "img-anchor" target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + 
+          '"><img class = "img" src = "' + json.stream.preview.medium + '"></img></a><h4>' + json.stream.viewers +
               ' viewers on <a target = "_blank" href = "https://www.twitch.tv/' + json.stream.channel.display_name + '">' 
               + json.stream.channel.display_name + '</a></h4></div>';
 
@@ -256,7 +256,8 @@ function getTwitchStreams() {
       counter++;
     }
     if (counter === json.featured.length){
-      document.getElementsByClassName("twitch-outer")[0].innerHTML += "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
+      document.getElementsByClassName("twitch-outer")[0].innerHTML += 
+      "<div class = 'placeholder'></div><div class = 'placeholder'></div><div class = 'placeholder'></div>";
     }
   })
 }
@@ -289,15 +290,15 @@ function searchResultDecoration(generator) {
   document.getElementsByClassName("button-span")[0].style.display = "inline-block";
   document.getElementsByClassName("close")[0].addEventListener("click", function(){
     document.getElementsByClassName("search-result-div")[0].innerHTML = "";
-    document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "0";
   });
+  document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "3vh";
 }
 
 function searchStreamerOffline(json, searchTerm){
   if (json.logo !== undefined && typeof json.logo === "string"){
     generator = 
-      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "searched-streamer-offline"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
-      + searchTerm + '">' + searchTerm + '</a> is offline!</h3><a target = "_blank" href = "https://www.twitch.tv/'
+      '<span class = "button-span"><button class = "close">&times;</button></span><div class = "searched-streamer-offline"><div class = "status"><h3><a target = "_blank" href = "https://www.twitch.tv/' 
+      + searchTerm + '">' + searchTerm + '</a> is offline!</h3></div><a class = "logo-anchor" target = "_blank" href = "https://www.twitch.tv/'
        + searchTerm + '"><img class = "logo" src="' + json.logo + '"></a></div>';
       document.getElementsByClassName("search-result-div")[0].style.padding = " 0 0 2vh 0";
       searchResultDecoration(generator);
@@ -305,6 +306,7 @@ function searchStreamerOffline(json, searchTerm){
       generator =
        '<span class = "button-span"><button class = "close">&times;</button></span><div class = "streamer-not-found"><h3>Sorry, this streamer couldn\'t be found!</h3></div>';
        searchResultDecoration(generator);
+       document.getElementsByClassName("search-result-div")[0].style.paddingBottom = "36.4px";
     }
   }
 
